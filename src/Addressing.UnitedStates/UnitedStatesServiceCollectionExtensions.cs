@@ -26,8 +26,12 @@ namespace ISOCodex.Addressing.UnitedStates
             Option("TX", "Texas"), Option("UT", "Utah"), Option("VT", "Vermont"),
             Option("VA", "Virginia"), Option("WA", "Washington"), Option("WV", "West Virginia"),
             Option("WI", "Wisconsin"), Option("WY", "Wyoming"), Option("DC", "District of Columbia"),
-            Option("AS", "American Samoa"), Option("GU", "Guam"), Option("MP", "Northern Mariana Islands"),
-            Option("PR", "Puerto Rico"), Option("VI", "U.S. Virgin Islands")
+            Option("AS", "American Samoa"), Option("FM", "Federated States of Micronesia"),
+            Option("GU", "Guam"), Option("MH", "Marshall Islands"),
+            Option("MP", "Northern Mariana Islands"), Option("PR", "Puerto Rico"),
+            Option("PW", "Palau"), Option("VI", "U.S. Virgin Islands"),
+            Option("AA", "Armed Forces Americas"), Option("AE", "Armed Forces Europe"),
+            Option("AP", "Armed Forces Pacific")
         };
 
         public static IServiceCollection AddUnitedStatesAddressing(this IServiceCollection services)

@@ -131,8 +131,10 @@ The Spain validator currently:
 
 - requires country code `ES`
 - requires a 5-digit postal code
-- validates province names when provided
+- validates province names and common aliases when provided
 - checks that the postal code prefix matches the supplied province when a province is supplied
+
+Validation is structural. It does not call external services and does not prove that an address exists or is deliverable.
 
 ## License
 

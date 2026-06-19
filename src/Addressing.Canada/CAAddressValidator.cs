@@ -8,7 +8,7 @@ namespace ISOCodex.Addressing.Canada
     public class CAAddressValidator : IAddressValidator
     {
         private static readonly Regex PostalCodeRegex = new Regex(
-            @"^[A-Z]\d[A-Z] \d[A-Z]\d$",
+            @"^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z] \d[ABCEGHJ-NPRSTV-Z]\d$",
             RegexOptions.Compiled);
 
         private static readonly HashSet<string> ValidProvinces =
@@ -27,7 +27,12 @@ namespace ISOCodex.Addressing.Canada
                 return new AddressValidationResult(issues);
             }
 
-            var normalizedPostalCode = NormalizePostalCode(address.PostalCode.Code);
+            if (!AddressValidationIssues.TryGetRequiredPostalCode(issues, address, out var postalCode))
+            {
+                return new AddressValidationResult(issues);
+            }
+
+            var normalizedPostalCode = NormalizePostalCode(postalCode);
 
             if (!PostalCodeRegex.IsMatch(normalizedPostalCode))
             {
@@ -38,7 +43,7 @@ namespace ISOCodex.Addressing.Canada
             }
 
             if (!string.IsNullOrWhiteSpace(address.StateOrProvince)
-                && !ValidProvinces.Contains(address.StateOrProvince))
+                && !ValidProvinces.Contains(address.StateOrProvince.Trim()))
             {
                 issues.Add(new AddressValidationIssue(
                     "Address.StateOrProvince.Invalid",

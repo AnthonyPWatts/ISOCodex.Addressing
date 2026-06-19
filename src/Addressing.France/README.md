@@ -71,9 +71,9 @@ The France validator currently:
 - requires country code `FR`
 - requires address line 1
 - requires city/commune
-- requires a five-digit postal code
+- requires a five-digit postal code, including overseas-style five-digit examples
 
-Formatting is presentation only. It does not validate the address, normalize the stored postal code, or prove the address exists.
+Validation is structural. It does not call external services and does not prove that an address exists or is deliverable. Formatting is presentation only. It does not validate the address or normalize the stored postal code.
 
 ## License
 

@@ -72,11 +72,11 @@ The Ireland validator currently:
 - requires country code `IE`
 - requires address line 1
 - requires town/city
-- requires an Eircode-shaped postal code
+- requires an Eircode-shaped postal code using characters allowed by the structural validator
 - accepts Eircodes with or without the internal space
 - compares Eircodes case-insensitively without mutating the stored postal code
 
-Formatting is presentation only. It does not validate the address, normalize the stored postal code, or prove the address exists.
+Validation is structural. It does not call external services and does not prove that an address exists or is deliverable. Formatting is presentation only. It does not validate the address or normalize the stored postal code.
 
 ## License
 
