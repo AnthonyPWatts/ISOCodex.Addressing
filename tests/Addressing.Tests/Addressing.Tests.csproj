@@ -17,10 +17,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Addressing\Addressing.csproj" />
+    <ProjectReference Include="..\..\src\Addressing.Brazil\Addressing.Brazil.csproj" />
     <ProjectReference Include="..\..\src\Addressing.Canada\Addressing.Canada.csproj" />
     <ProjectReference Include="..\..\src\Addressing.France\Addressing.France.csproj" />
+    <ProjectReference Include="..\..\src\Addressing.Germany\Addressing.Germany.csproj" />
     <ProjectReference Include="..\..\src\Addressing.GreatBritain\Addressing.GreatBritain.csproj" />
+    <ProjectReference Include="..\..\src\Addressing.India\Addressing.India.csproj" />
     <ProjectReference Include="..\..\src\Addressing.Ireland\Addressing.Ireland.csproj" />
+    <ProjectReference Include="..\..\src\Addressing.Italy\Addressing.Italy.csproj" />
+    <ProjectReference Include="..\..\src\Addressing.Mexico\Addressing.Mexico.csproj" />
     <ProjectReference Include="..\..\src\Addressing.Spain\Addressing.Spain.csproj" />
     <ProjectReference Include="..\..\src\Addressing.UnitedStates\Addressing.UnitedStates.csproj" />
   </ItemGroup>
