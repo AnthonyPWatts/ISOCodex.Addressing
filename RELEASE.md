@@ -8,9 +8,14 @@ are immutable, so complete these checks before pushing any package.
 - Confirm `Directory.Build.props` contains the intended package version.
 - Confirm the version has not already been published for any package ID:
   - `ISOCodex.Addressing`
+  - `ISOCodex.Addressing.Brazil`
   - `ISOCodex.Addressing.GreatBritain`
   - `ISOCodex.Addressing.UnitedStates`
   - `ISOCodex.Addressing.Canada`
+  - `ISOCodex.Addressing.Germany`
+  - `ISOCodex.Addressing.India`
+  - `ISOCodex.Addressing.Italy`
+  - `ISOCodex.Addressing.Mexico`
   - `ISOCodex.Addressing.Spain`
   - `ISOCodex.Addressing.Ireland`
   - `ISOCodex.Addressing.France`
@@ -44,6 +49,7 @@ Before publishing, inspect the generated nuspec metadata and confirm:
 - all packages use the intended version
 - all packages reference the pushed release commit
 - every country package depends on the same version of `ISOCodex.Addressing`
+  as the published core package
 
 ## Publish Order
 
@@ -62,6 +68,11 @@ dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Canada.<version>.n
 dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Spain.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
 dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Ireland.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
 dotnet nuget push artifacts/release-check/ISOCodex.Addressing.France.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
+dotnet nuget push artifacts/release-check/ISOCodex.Addressing.India.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
+dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Brazil.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
+dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Mexico.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
+dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Germany.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
+dotnet nuget push artifacts/release-check/ISOCodex.Addressing.Italy.<version>.nupkg --source https://api.nuget.org/v3/index.json --api-key <api-key>
 ```
 
 After publishing, confirm every package ID lists the new version on NuGet.
