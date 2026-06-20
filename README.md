@@ -64,6 +64,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.GreatBritain;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -84,7 +85,7 @@ var address = new Address(
     city: "London",
     stateOrProvince: null,
     postalCode: new PostalCode("SW1A 2AA"),
-    countryCode: CountryCode.GB);
+    countryCode: CountryAlpha2Code.Parse("GB"));
 
 var validationResult = validatorFactory
     .GetValidator(address.CountryCode)
@@ -155,9 +156,10 @@ For countries with well-defined administrative subdivisions in the package, the 
 
 ```csharp
 using ISOCodex.Addressing.Profiles;
+using ISOCodex.Countries;
 
 var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
-var profile = profileProvider.GetProfile(CountryCode.GB);
+var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("GB"));
 
 foreach (var field in profile.Fields.OrderBy(field => field.DisplayOrder))
 {
@@ -299,7 +301,7 @@ This keeps the core package framework-agnostic. An optional adapter package may 
 
 ## Unsupported countries and fallback behaviour
 
-`CountryCode` accepts any valid ISO 3166-1 alpha-2 country code, but country-specific formatting and validation are only available when a formatter and validator have been registered for that country.
+`Address.CountryCode` is a `CountryAlpha2Code` from `ISOCodex.Countries`. Construct it from canonical alpha-2 input, or resolve alpha-3, numeric, alias, or display-name input through `ISOCodex.Countries` at your application boundary before constructing an `Address`.
 
 By default, unsupported countries remain explicit: `GetValidator(...)` and `Format(...)` throw when no country-specific service is registered. This helps applications catch missing country packs when strict validation is expected.
 
@@ -317,19 +319,21 @@ services.AddGenericAddressingFallbacks();
 With these fallbacks:
 
 - registered country packs are still used first
-- unregistered ISO countries use `PermissiveAddressValidator`
-- unregistered ISO countries use `GenericAddressFormatter`
-- unregistered ISO countries use a generic `AddressProfile`
+- unregistered current countries known by `ISOCodex.Countries` use `PermissiveAddressValidator`
+- unregistered current countries known by `ISOCodex.Countries` use `GenericAddressFormatter`
+- unregistered current countries known by `ISOCodex.Countries` use a generic `AddressProfile`
+- special or non-country code elements such as `EU` do not use postal-address fallbacks
+- alias-like values such as `UK` are not silently resolved to `GB`
 - validation does not prove the address is deliverable
 
 The fallback validator accepts any non-null `Address` instance. It is intended for store-first or validate-later workflows where the consuming application still wants a structured address object.
 
-The fallback formatter emits the available structured fields in a generic order and uses the ISO country code as the country line:
+The fallback formatter emits the available structured fields in a generic order and uses the Countries English short name as the country line:
 
 ```text
 1 Rue de Rivoli
 Paris 75001
-FR
+France
 ```
 
 Fallbacks do not make the `Address` model fully freeform. `Address` still requires `Line1`, `City`, `PostalCode`, and `CountryCode`. If an application needs to store addresses that cannot fit that structure, it should keep a separate raw/freeform field in its own persistence model.
@@ -353,7 +357,7 @@ Recommended constraints:
 
 - require `Line1`, `City`, `PostalCode`, and `CountryCode`
 - allow `Line2` and `StateOrProvince` to be null
-- constrain `CountryCode` to exactly two uppercase ASCII letters
+- constrain `CountryCode` to exactly two uppercase ASCII letters and validate/canonicalise values through `ISOCodex.Countries`
 - avoid country-specific postal-code constraints in the database
 - use Unicode string columns for human-entered address fields
 
@@ -417,11 +421,11 @@ This metadata is application state, so it is not part of the `Address` value obj
   "city": "London",
   "stateOrProvince": null,
   "postalCode": { "code": "SW1A 2AA" },
-  "countryCode": { "code": "GB" }
+  "countryCode": { "value": "GB" }
 }
 ```
 
-For public APIs or storage contracts that should expose scalar strings, map to an application DTO with `postalCode` and `countryCode` string properties.
+For public APIs or storage contracts that should expose scalar strings, map to an application DTO with `postalCode` and `countryCode` string properties. Use `CountryAlpha2Code.Parse(...)`, `CountryAlpha2Code.TryParse(...)`, or richer `ISOCodex.Countries` registry lookup at the boundary.
 
 ## Country packages
 
@@ -480,6 +484,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Spain;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -503,6 +508,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Ireland;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -518,7 +524,7 @@ var address = new Address(
     city: "Dublin",
     stateOrProvince: null,
     postalCode: new PostalCode("D02 X285"),
-    countryCode: CountryCode.IE);
+    countryCode: CountryAlpha2Code.Parse("IE"));
 ```
 
 Default formatted Ireland output:
@@ -540,6 +546,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.France;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -555,7 +562,7 @@ var address = new Address(
     city: "Paris",
     stateOrProvince: null,
     postalCode: new PostalCode("75001"),
-    countryCode: CountryCode.FR);
+    countryCode: CountryAlpha2Code.Parse("FR"));
 ```
 
 Default formatted France output:

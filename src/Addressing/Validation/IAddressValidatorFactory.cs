@@ -1,9 +1,11 @@
+using ISOCodex.Countries;
+
 namespace ISOCodex.Addressing.Validation
 {
     public interface IAddressValidatorFactory
     {
-        IAddressValidator GetValidator(CountryCode countryCode);
+        IAddressValidator GetValidator(CountryAlpha2Code countryCode);
 
-        void RegisterValidator(CountryCode countryCode, IAddressValidator validator);
+        void RegisterValidator(CountryAlpha2Code countryCode, IAddressValidator validator);
     }
 }

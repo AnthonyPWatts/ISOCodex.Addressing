@@ -18,7 +18,7 @@ namespace ISOCodex.Addressing.Brazil
                 AddressFormatting.JoinParts(" - ", address.City, address.StateOrProvince));
             AddressFormatting.AddIfNotWhiteSpace(lines, address.PostalCode.Code);
 
-            return AddressFormatting.FormatLines(lines, "Brazil", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

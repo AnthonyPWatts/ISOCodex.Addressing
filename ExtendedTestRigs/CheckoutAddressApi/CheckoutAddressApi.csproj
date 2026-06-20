@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+
   <ItemGroup>
+    <PackageReference Include="ISOCodex.Countries" Version="1.0.0-alpha" />
+  </ItemGroup>
+
+<ItemGroup>
     <ProjectReference Include="..\..\src\Addressing\Addressing.csproj" />
     <ProjectReference Include="..\..\src\Addressing.Canada\Addressing.Canada.csproj" />
     <ProjectReference Include="..\..\src\Addressing.Spain\Addressing.Spain.csproj" />

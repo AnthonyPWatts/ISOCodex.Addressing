@@ -17,7 +17,7 @@ services.AddBrazilAddressing();
 
 ## What it provides
 
-- `CountryCode.BR` validator registration.
+- `BR` validator registration.
 - Brazil address formatter.
 - Brazil address profile metadata for forms.
 - CEP shape validation with or without a hyphen.
@@ -27,14 +27,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "Praça da Sé",
     null,
     "São Paulo",
     "SP",
     new PostalCode("01001-000"),
-    CountryCode.BR);
+    CountryAlpha2Code.Parse("BR"));
 ```
 
 Formatted output:

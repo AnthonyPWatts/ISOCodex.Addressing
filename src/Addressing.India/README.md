@@ -17,7 +17,7 @@ services.AddIndiaAddressing();
 
 ## What it provides
 
-- `CountryCode.IN` validator registration.
+- `IN` validator registration.
 - India address formatter.
 - India address profile metadata for forms.
 - PIN-code shape validation using six digits.
@@ -27,14 +27,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "Rashtrapati Bhavan",
     null,
     "New Delhi",
     "DL",
     new PostalCode("110004"),
-    CountryCode.IN);
+    CountryAlpha2Code.Parse("IN"));
 ```
 
 Formatted output:

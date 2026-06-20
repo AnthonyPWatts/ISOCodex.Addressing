@@ -1,22 +1,23 @@
 using System;
 using System.Collections.Concurrent;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Validation
 {
     public class AddressValidatorFactory : IAddressValidatorFactory
     {
-        private readonly ConcurrentDictionary<string, IAddressValidator> _validators =
-            new ConcurrentDictionary<string, IAddressValidator>();
+        private readonly ConcurrentDictionary<CountryAlpha2Code, IAddressValidator> _validators =
+            new ConcurrentDictionary<CountryAlpha2Code, IAddressValidator>();
         private IAddressValidator? _fallbackValidator;
 
-        public void RegisterValidator(CountryCode countryCode, IAddressValidator validator)
+        public void RegisterValidator(CountryAlpha2Code countryCode, IAddressValidator validator)
         {
             if (validator == null)
             {
                 throw new ArgumentNullException(nameof(validator));
             }
 
-            _validators[countryCode.Code] = validator;
+            _validators[countryCode] = validator;
         }
 
         public void RegisterFallbackValidator(IAddressValidator validator)
@@ -29,20 +30,20 @@ namespace ISOCodex.Addressing.Validation
             _fallbackValidator = validator;
         }
 
-        public IAddressValidator GetValidator(CountryCode countryCode)
+        public IAddressValidator GetValidator(CountryAlpha2Code countryCode)
         {
-            if (_validators.TryGetValue(countryCode.Code, out var validator))
+            if (_validators.TryGetValue(countryCode, out var validator))
             {
                 return validator;
             }
 
-            if (_fallbackValidator != null)
+            if (_fallbackValidator != null && CountryRegistry.TryGetByAlpha2(countryCode, out _))
             {
                 return _fallbackValidator;
             }
 
             throw new InvalidOperationException(
-                $"No address validator registered for country code '{countryCode.Code}'.");
+                $"No address validator registered for country code '{countryCode.Value}'.");
         }
     }
 }

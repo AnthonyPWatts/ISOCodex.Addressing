@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ISOCodex.Countries;
 using System.Text.RegularExpressions;
 using ISOCodex.Addressing.Validation;
 
@@ -13,7 +14,7 @@ namespace ISOCodex.Addressing.France
         {
             var issues = new List<AddressValidationIssue>();
 
-            AddressValidationIssues.AddCommonIssues(issues, address, CountryCode.FR, "French");
+            AddressValidationIssues.AddCommonIssues(issues, address, CountryAlpha2Code.Parse("FR"), "French");
 
             if (address == null)
             {

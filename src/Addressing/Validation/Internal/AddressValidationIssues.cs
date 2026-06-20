@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Validation
 {
@@ -7,7 +8,7 @@ namespace ISOCodex.Addressing.Validation
         public static void AddCommonIssues(
             ICollection<AddressValidationIssue> issues,
             Address? address,
-            CountryCode expectedCountry,
+            CountryAlpha2Code expectedCountry,
             string countryName)
         {
             if (address == null)
@@ -38,7 +39,7 @@ namespace ISOCodex.Addressing.Validation
             {
                 issues.Add(new AddressValidationIssue(
                     "Address.CountryCode.Invalid",
-                    $"CountryCode must be '{expectedCountry.Code}' for {countryName} addresses.",
+                    $"CountryCode must be '{expectedCountry.Value}' for {countryName} addresses.",
                     nameof(Address.CountryCode)));
             }
         }

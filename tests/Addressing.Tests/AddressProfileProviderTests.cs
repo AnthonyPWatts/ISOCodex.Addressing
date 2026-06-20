@@ -1,4 +1,5 @@
 using System;
+using ISOCodex.Countries;
 using System.Linq;
 using ISOCodex.Addressing.Canada;
 using ISOCodex.Addressing.GreatBritain;
@@ -16,9 +17,9 @@ public class AddressProfileProviderTests
     {
         var provider = new DefaultAddressProfileProvider();
         provider.RegisterProfile(
-            CountryCode.GB,
+            CountryAlpha2Code.Parse("GB"),
             new AddressProfile(
-                CountryCode.GB,
+                CountryAlpha2Code.Parse("GB"),
                 new[]
                 {
                     new AddressFieldProfile(
@@ -28,18 +29,18 @@ public class AddressProfileProviderTests
                         10)
                 }));
 
-        var profile = provider.GetProfile(CountryCode.GB);
+        var profile = provider.GetProfile(CountryAlpha2Code.Parse("GB"));
 
-        Assert.Equal(CountryCode.GB, profile.CountryCode);
+        Assert.Equal(CountryAlpha2Code.Parse("GB"), profile.CountryCode);
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
     }
 
     [Fact]
     public void AddAddressing_WithGb_RegistersProfileWithRequiredCoreFields()
     {
-        var provider = BuildProfileProvider(CountryCode.GB);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("GB"));
 
-        var profile = provider.GetProfile(CountryCode.GB);
+        var profile = provider.GetProfile(CountryAlpha2Code.Parse("GB"));
 
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         AssertRequired(profile, AddressField.AddressLine1);
@@ -51,10 +52,10 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_WithGb_LabelsPostalCodeAsPostcode()
     {
-        var provider = BuildProfileProvider(CountryCode.GB);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("GB"));
 
         var postalCode = provider
-            .GetProfile(CountryCode.GB)
+            .GetProfile(CountryAlpha2Code.Parse("GB"))
             .Fields
             .Single(field => field.Field == AddressField.PostalCode);
 
@@ -64,8 +65,8 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_WithUs_UsesUsFieldLabels()
     {
-        var provider = BuildProfileProvider(CountryCode.US);
-        var profile = provider.GetProfile(CountryCode.US);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("US"));
+        var profile = provider.GetProfile(CountryAlpha2Code.Parse("US"));
 
         Assert.Equal(
             "State",
@@ -78,9 +79,9 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_WithUs_ProvidesStateOptions()
     {
-        var provider = BuildProfileProvider(CountryCode.US);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("US"));
 
-        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryCode.US));
+        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryAlpha2Code.Parse("US")));
 
         Assert.Equal(AddressFieldInputKind.Select, administrativeArea.InputKind);
         Assert.Contains(
@@ -94,8 +95,8 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_WithCa_UsesCanadaFieldLabels()
     {
-        var provider = BuildProfileProvider(CountryCode.CA);
-        var profile = provider.GetProfile(CountryCode.CA);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("CA"));
+        var profile = provider.GetProfile(CountryAlpha2Code.Parse("CA"));
 
         Assert.Equal(
             "Province or territory",
@@ -108,9 +109,9 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_WithCa_ProvidesProvinceAndTerritoryOptions()
     {
-        var provider = BuildProfileProvider(CountryCode.CA);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("CA"));
 
-        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryCode.CA));
+        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryAlpha2Code.Parse("CA")));
 
         Assert.Equal(AddressFieldInputKind.Select, administrativeArea.InputKind);
         Assert.Equal(13, administrativeArea.Options.Count);
@@ -125,9 +126,9 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_WithGb_DoesNotProvideCountyOptions()
     {
-        var provider = BuildProfileProvider(CountryCode.GB);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("GB"));
 
-        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryCode.GB));
+        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryAlpha2Code.Parse("GB")));
 
         Assert.Equal("County", administrativeArea.Label);
         Assert.False(administrativeArea.IsRequired);
@@ -145,14 +146,32 @@ public class AddressProfileProviderTests
         using var serviceProvider = services.BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
 
-        var profile = provider.GetProfile(CountryCode.Parse("FR"));
+        var profile = provider.GetProfile(CountryAlpha2Code.Parse("FR"));
 
-        Assert.Equal(CountryCode.Parse("FR"), profile.CountryCode);
+        Assert.Equal(CountryAlpha2Code.Parse("FR"), profile.CountryCode);
         Assert.Equal(AddressProfileSource.GenericFallback, profile.Source);
         AssertRequired(profile, AddressField.Country);
         Assert.Contains(
             profile.Fields,
             field => field.Field == AddressField.AddressLine1 && field.IsRequired);
+    }
+
+    [Theory]
+    [InlineData("EU")]
+    [InlineData("UK")]
+    public void GetProfile_WithFallbackProfile_DoesNotUseFallbackForNonDeliverableCountryCodes(string countryCode)
+    {
+        var services = new ServiceCollection();
+        services.AddAddressing();
+        services.AddGenericAddressingFallbacks();
+
+        using var serviceProvider = services.BuildServiceProvider();
+        var provider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
+
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => provider.GetProfile(CountryAlpha2Code.Parse(countryCode)));
+
+        Assert.Contains(countryCode, ex.Message);
     }
 
     [Fact]
@@ -161,7 +180,7 @@ public class AddressProfileProviderTests
         var provider = new DefaultAddressProfileProvider();
 
         var ex = Assert.Throws<InvalidOperationException>(
-            () => provider.GetProfile(CountryCode.US));
+            () => provider.GetProfile(CountryAlpha2Code.Parse("US")));
 
         Assert.Contains("US", ex.Message);
     }
@@ -169,9 +188,9 @@ public class AddressProfileProviderTests
     [Fact]
     public void GetProfile_ReturnsFieldsInStableDisplayOrder()
     {
-        var provider = BuildProfileProvider(CountryCode.GB);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("GB"));
         var displayOrders = provider
-            .GetProfile(CountryCode.GB)
+            .GetProfile(CountryAlpha2Code.Parse("GB"))
             .Fields
             .Select(field => field.DisplayOrder)
             .ToArray();
@@ -192,7 +211,7 @@ public class AddressProfileProviderTests
                 10)
         };
 
-        var profile = new AddressProfile(CountryCode.GB, fields);
+        var profile = new AddressProfile(CountryAlpha2Code.Parse("GB"), fields);
 
         fields[0] = new AddressFieldProfile(
             AddressField.Country,
@@ -207,9 +226,9 @@ public class AddressProfileProviderTests
     [Fact]
     public void AddAddressing_RegistersAddressProfileProvider()
     {
-        var provider = BuildProfileProvider(CountryCode.GB);
+        var provider = BuildProfileProvider(CountryAlpha2Code.Parse("GB"));
 
-        Assert.Equal(CountryCode.GB, provider.GetProfile(CountryCode.GB).CountryCode);
+        Assert.Equal(CountryAlpha2Code.Parse("GB"), provider.GetProfile(CountryAlpha2Code.Parse("GB")).CountryCode);
     }
 
     [Fact]
@@ -223,7 +242,7 @@ public class AddressProfileProviderTests
         using var serviceProvider = services.BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
 
-        var profile = provider.GetProfile(CountryCode.ES);
+        var profile = provider.GetProfile(CountryAlpha2Code.Parse("ES"));
 
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal(
@@ -242,7 +261,7 @@ public class AddressProfileProviderTests
         using var serviceProvider = services.BuildServiceProvider();
         var provider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
 
-        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryCode.ES));
+        var administrativeArea = GetAdministrativeArea(provider.GetProfile(CountryAlpha2Code.Parse("ES")));
 
         Assert.Equal(AddressFieldInputKind.Select, administrativeArea.InputKind);
         Assert.Contains(
@@ -274,28 +293,28 @@ public class AddressProfileProviderTests
         Assert.False(field.Options is AddressFieldOption[]);
     }
 
-    private static IAddressProfileProvider BuildProfileProvider(params CountryCode[] countries)
+    private static IAddressProfileProvider BuildProfileProvider(params CountryAlpha2Code[] countries)
     {
         var services = new ServiceCollection();
         services.AddAddressing();
 
         foreach (var country in countries)
         {
-            if (country == CountryCode.GB)
+            if (country == CountryAlpha2Code.Parse("GB"))
             {
                 services.AddGreatBritainAddressing();
             }
-            else if (country == CountryCode.US)
+            else if (country == CountryAlpha2Code.Parse("US"))
             {
                 services.AddUnitedStatesAddressing();
             }
-            else if (country == CountryCode.CA)
+            else if (country == CountryAlpha2Code.Parse("CA"))
             {
                 services.AddCanadaAddressing();
             }
             else
             {
-                throw new ArgumentException($"No test country pack registration for {country.Code}.", nameof(countries));
+                throw new ArgumentException($"No test country pack registration for {country.Value}.", nameof(countries));
             }
         }
 

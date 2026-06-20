@@ -29,6 +29,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Spain;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -48,21 +49,21 @@ var address = new Address(
     city: "Madrid",
     stateOrProvince: "Madrid",
     postalCode: new PostalCode("28013"),
-    countryCode: CountryCode.ES);
+    countryCode: CountryAlpha2Code.Parse("ES"));
 
 var validationResult = validatorFactory
-    .GetValidator(CountryCode.ES)
+    .GetValidator(CountryAlpha2Code.Parse("ES"))
     .Validate(address);
 
 var formatted = formatter.Format(address);
-var profile = profileProvider.GetProfile(CountryCode.ES);
+var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("ES"));
 ```
 
 Validation returns structured issue data:
 
 ```csharp
 var result = validatorFactory
-    .GetValidator(CountryCode.ES)
+    .GetValidator(CountryAlpha2Code.Parse("ES"))
     .Validate(address);
 ```
 
@@ -80,7 +81,7 @@ Spain
 
 ## Formatting behaviour
 
-The Spanish formatter produces a postal-friendly layout using the core `IAddressFormatter` service. `AddSpainAddressing()` registers the Spanish formatter for `CountryCode.ES`, so consumers do not need to resolve Spain-specific services directly.
+The Spanish formatter produces a postal-friendly layout using the core `IAddressFormatter` service. `AddSpainAddressing()` registers the Spanish formatter for `CountryAlpha2Code.Parse("ES")`, so consumers do not need to resolve Spain-specific services directly.
 
 The country name is currently emitted as the English display name `Spain`.
 

@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.GreatBritain;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Tests;
 
@@ -66,7 +67,7 @@ public class GBAddressValidatorTests
             "London",
             null,
             default,
-            CountryCode.GB));
+            CountryAlpha2Code.Parse("GB")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -77,7 +78,7 @@ public class GBAddressValidatorTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(new PostalCode("SW1A 2AA"), CountryCode.US));
+        var result = _validator.Validate(CreateAddress(new PostalCode("SW1A 2AA"), CountryAlpha2Code.Parse("US")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -87,7 +88,7 @@ public class GBAddressValidatorTests
 
     private static Address CreateAddress(
         PostalCode postalCode,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             "10 Downing St",
@@ -95,6 +96,6 @@ public class GBAddressValidatorTests
             "London",
             null,
             postalCode,
-            countryCode.Equals(default) ? CountryCode.GB : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("GB") : countryCode);
     }
 }

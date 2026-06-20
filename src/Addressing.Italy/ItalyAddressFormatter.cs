@@ -17,7 +17,7 @@ namespace ISOCodex.Addressing.Italy
                 lines,
                 AddressFormatting.JoinParts(" ", address.PostalCode.Code, address.City, address.StateOrProvince));
 
-            return AddressFormatting.FormatLines(lines, "Italy", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

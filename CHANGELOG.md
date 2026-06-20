@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0-alpha
+
+- Replaced the Addressing-owned `CountryCode` value object with `ISOCodex.Countries.CountryAlpha2Code`.
+- Added a published package dependency on `ISOCodex.Countries` `1.0.0-alpha`.
+- Routed validators, formatters, and address profiles by Countries-owned alpha-2 identity.
+- Delegated formatter country-line display names to `ISOCodex.Countries`.
+- Limited generic fallbacks to current countries known by `ISOCodex.Countries`; special code elements such as `EU` and alias-like values such as `UK` are not treated as deliverable countries.
+
 ## 1.3.0
 
 - Added country packages for India, Brazil, Mexico, Germany, and Italy.

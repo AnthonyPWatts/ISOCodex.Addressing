@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Formatting
 {
@@ -41,6 +42,13 @@ namespace ISOCodex.Addressing.Formatting
                 parts
                     .Where(part => !string.IsNullOrWhiteSpace(part))
                     .Select(part => part!.Trim()));
+        }
+
+        public static string GetCountryLine(CountryAlpha2Code countryCode)
+        {
+            return CountryNameRegistry.TryGetEnglishShortName(countryCode, out var countryName)
+                ? countryName!
+                : countryCode.Value;
         }
     }
 }

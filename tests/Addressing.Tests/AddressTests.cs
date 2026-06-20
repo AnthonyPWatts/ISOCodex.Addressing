@@ -1,3 +1,5 @@
+using ISOCodex.Countries;
+
 namespace ISOCodex.Addressing.Tests;
 
 public class AddressTests
@@ -11,7 +13,7 @@ public class AddressTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB));
+            CountryAlpha2Code.Parse("GB")));
     }
 
     [Fact]
@@ -23,7 +25,7 @@ public class AddressTests
             null!,
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB));
+            CountryAlpha2Code.Parse("GB")));
     }
 
     [Fact]
@@ -35,7 +37,7 @@ public class AddressTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         Assert.Equal("10 Downing St", address.Line1);
         Assert.Equal("London", address.City);

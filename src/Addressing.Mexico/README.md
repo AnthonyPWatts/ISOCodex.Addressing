@@ -17,7 +17,7 @@ services.AddMexicoAddressing();
 
 ## What it provides
 
-- `CountryCode.MX` validator registration.
+- `MX` validator registration.
 - Mexico address formatter.
 - Mexico address profile metadata for forms.
 - Five-digit postal-code validation, including leading-zero codes.
@@ -27,14 +27,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "Palacio Nacional",
     null,
     "Ciudad de México",
     "CMX",
     new PostalCode("06066"),
-    CountryCode.MX);
+    CountryAlpha2Code.Parse("MX"));
 ```
 
 Formatted output:

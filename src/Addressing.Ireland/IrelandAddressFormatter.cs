@@ -16,7 +16,7 @@ namespace ISOCodex.Addressing.Ireland
             AddressFormatting.AddIfNotWhiteSpace(lines, address.City);
             AddressFormatting.AddIfNotWhiteSpace(lines, address.PostalCode.Code);
 
-            return AddressFormatting.FormatLines(lines, "Ireland", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

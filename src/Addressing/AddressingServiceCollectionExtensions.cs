@@ -1,4 +1,5 @@
 using System;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Formatting.Formatters;
 using ISOCodex.Addressing.Profiles;
@@ -22,7 +23,7 @@ namespace ISOCodex.Addressing
 
         public static IServiceCollection AddAddressValidator(
             this IServiceCollection services,
-            CountryCode country,
+            CountryAlpha2Code country,
             Func<IAddressValidator> validatorFactory)
         {
             if (services == null)
@@ -43,7 +44,7 @@ namespace ISOCodex.Addressing
 
         public static IServiceCollection AddAddressFormatter(
             this IServiceCollection services,
-            CountryCode country,
+            CountryAlpha2Code country,
             Func<ICountryAddressFormatter> formatterFactory)
         {
             if (services == null)
@@ -64,7 +65,7 @@ namespace ISOCodex.Addressing
 
         public static IServiceCollection AddAddressProfile(
             this IServiceCollection services,
-            CountryCode country,
+            CountryAlpha2Code country,
             Func<AddressProfile> profileFactory)
         {
             if (services == null)

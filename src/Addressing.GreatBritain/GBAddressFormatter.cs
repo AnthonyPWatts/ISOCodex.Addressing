@@ -16,7 +16,7 @@ namespace ISOCodex.Addressing.GreatBritain
             AddressFormatting.AddIfNotWhiteSpace(lines, address.City);
             AddressFormatting.AddIfNotWhiteSpace(lines, address.PostalCode.Code);
 
-            return AddressFormatting.FormatLines(lines, "United Kingdom", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

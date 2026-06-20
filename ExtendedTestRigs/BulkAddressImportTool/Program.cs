@@ -1,4 +1,5 @@
 using System.Globalization;
+using ISOCodex.Countries;
 using System.Text;
 using System.Text.Json;
 using ISOCodex.Addressing;
@@ -92,9 +93,9 @@ static ImportResult ProcessRow(
 
     var issues = new List<PersistedIssue>();
     var countryText = Get(row.Values, "countryCode")?.Trim();
-    if (!CountryCode.TryParse(countryText ?? string.Empty, out var country))
+    if (!CountryAlpha2Code.TryParse(countryText ?? string.Empty, out var country))
     {
-        issues.Add(new PersistedIssue("CountryCode.Invalid", "CountryCode", "Country code must be an ISO 3166-1 alpha-2 code."));
+        issues.Add(new PersistedIssue("CountryCode.Invalid", "countryCode", "Country code must be an ISO 3166-1 alpha-2 code."));
     }
 
     var line1 = Get(row.Values, "line1")?.Trim();
@@ -145,7 +146,7 @@ static ImportResult ProcessRow(
     return new ImportResult(
         row.RowNumber,
         row.Raw,
-        country.Code,
+        country.Value,
         ToPersistedAddress(address),
         status,
         validationIssues,
@@ -244,7 +245,7 @@ static void WriteResultsCsv(string path, IReadOnlyList<ImportResult> results)
     lines.AddRange(results.Select(result => string.Join(
         ",",
         Csv(result.RowNumber.ToString(CultureInfo.InvariantCulture)),
-        Csv(result.CountryCode ?? string.Empty),
+        Csv(result.CountryAlpha2Code ?? string.Empty),
         Csv(result.Status),
         Csv(string.Join("|", result.Issues.Select(issue => issue.Code))),
         Csv(result.FormattedSingleLine ?? string.Empty))));
@@ -274,12 +275,12 @@ static void WriteSummary(string path, string inputPath, IReadOnlyList<ImportResu
     File.WriteAllText(path, summary.ToString());
 }
 
-static bool IsCountrySpecific(CountryCode country)
+static bool IsCountrySpecific(CountryAlpha2Code country)
 {
-    return country == CountryCode.GB
-        || country == CountryCode.IE
-        || country == CountryCode.FR
-        || country == CountryCode.ES;
+    return country == CountryAlpha2Code.Parse("GB")
+        || country == CountryAlpha2Code.Parse("IE")
+        || country == CountryAlpha2Code.Parse("FR")
+        || country == CountryAlpha2Code.Parse("ES");
 }
 
 static PersistedAddress ToPersistedAddress(Address address)
@@ -290,7 +291,7 @@ static PersistedAddress ToPersistedAddress(Address address)
         address.City,
         address.StateOrProvince,
         address.PostalCode.Code,
-        address.CountryCode.Code);
+        address.CountryCode.Value);
 }
 
 static string? Get(IReadOnlyDictionary<string, string> values, string key)
@@ -322,7 +323,7 @@ public sealed record PersistedAddress(
     string City,
     string? StateOrProvince,
     string PostalCode,
-    string CountryCode);
+    string CountryAlpha2Code);
 
 public sealed record PersistedIssue(
     string Code,
@@ -332,7 +333,7 @@ public sealed record PersistedIssue(
 public sealed record ImportResult(
     int RowNumber,
     string Raw,
-    string? CountryCode,
+    string? CountryAlpha2Code,
     PersistedAddress? Address,
     string Status,
     IReadOnlyList<PersistedIssue> Issues,

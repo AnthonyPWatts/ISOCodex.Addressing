@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Italy;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
@@ -24,10 +25,10 @@ public class ItalyAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.IT).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("IT")).Validate(address).IsValid);
         Assert.Equal("Piazza del Colosseo 1\n00184 Roma RM\nItaly", formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.IT);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("IT"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("CAP", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         var administrativeArea = profile.Fields.Single(field => field.Field == AddressField.AdministrativeArea);
@@ -65,7 +66,7 @@ public class ItalyAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.DE));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("DE")));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Issues, issue => issue.Code == "Address.CountryCode.Invalid");
@@ -110,7 +111,7 @@ public class ItalyAddressingIntegrationTests
         string city = "Roma",
         string? stateOrProvince = "RM",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -118,11 +119,11 @@ public class ItalyAddressingIntegrationTests
             city,
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("00184") : postalCode,
-            countryCode.Equals(default) ? CountryCode.IT : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("IT") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
     {
-        return new Address("Piazza del Colosseo 1", null, "Roma", "RM", default, CountryCode.IT);
+        return new Address("Piazza del Colosseo 1", null, "Roma", "RM", default, CountryAlpha2Code.Parse("IT"));
     }
 }

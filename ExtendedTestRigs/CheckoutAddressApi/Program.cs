@@ -1,4 +1,5 @@
 using ISOCodex.Addressing;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Canada;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.France;
@@ -146,11 +147,11 @@ static AddressValidationOutcome ValidateRequest(
 static bool TryGetSupportedCountry(
     string? value,
     SupportedCountry[] supportedCountries,
-    out CountryCode country,
+    out CountryAlpha2Code country,
     out ApiValidationIssue error)
 {
     country = default;
-    if (!CountryCode.TryParse(value ?? string.Empty, out var parsed))
+    if (!CountryAlpha2Code.TryParse(value ?? string.Empty, out var parsed))
     {
         error = new ApiValidationIssue(
             "CountryCode.Invalid",
@@ -159,12 +160,12 @@ static bool TryGetSupportedCountry(
         return false;
     }
 
-    if (!supportedCountries.Any(c => c.Code == parsed.Code))
+    if (!supportedCountries.Any(c => c.Code == parsed.Value))
     {
         error = new ApiValidationIssue(
             "CountryCode.Unsupported",
             "countryCode",
-            $"Country '{parsed.Code}' is not supported by this checkout service.");
+            $"Country '{parsed.Value}' is not supported by this checkout service.");
         return false;
     }
 
@@ -173,7 +174,7 @@ static bool TryGetSupportedCountry(
     return true;
 }
 
-static List<ApiValidationIssue> MapConstructionIssues(AddressRequest request, CountryCode country)
+static List<ApiValidationIssue> MapConstructionIssues(AddressRequest request, CountryAlpha2Code country)
 {
     var issues = new List<ApiValidationIssue>();
 
@@ -192,7 +193,7 @@ static List<ApiValidationIssue> MapConstructionIssues(AddressRequest request, Co
         issues.Add(new ApiValidationIssue("PostalCode.Required", "postalCode", "Postal code is required."));
     }
 
-    if (country == CountryCode.ES && string.IsNullOrWhiteSpace(request.StateOrProvince))
+    if (country == CountryAlpha2Code.Parse("ES") && string.IsNullOrWhiteSpace(request.StateOrProvince))
     {
         issues.Add(new ApiValidationIssue("AdministrativeArea.Required", "stateOrProvince", "Province is required for Spanish addresses."));
     }
@@ -203,7 +204,7 @@ static List<ApiValidationIssue> MapConstructionIssues(AddressRequest request, Co
 static ProfileResponse ToProfileResponse(AddressProfile profile)
 {
     return new ProfileResponse(
-        profile.CountryCode.Code,
+        profile.CountryCode.Value,
         profile.Source.ToString(),
         profile.ExamplePostalCode,
         profile.ExampleFormattedAddress,

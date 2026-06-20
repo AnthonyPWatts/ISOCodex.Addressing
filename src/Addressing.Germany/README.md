@@ -17,7 +17,7 @@ services.AddGermanyAddressing();
 
 ## What it provides
 
-- `CountryCode.DE` validator registration.
+- `DE` validator registration.
 - Germany address formatter.
 - Germany address profile metadata for forms.
 - Five-digit postcode validation.
@@ -26,14 +26,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "Pariser Platz 1",
     null,
     "Berlin",
     null,
     new PostalCode("10117"),
-    CountryCode.DE);
+    CountryAlpha2Code.Parse("DE"));
 ```
 
 Formatted output:

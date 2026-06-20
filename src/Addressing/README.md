@@ -4,14 +4,14 @@
 
 ## Features
 
-- ISO 3166-1 alpha-2 country code value object
+- Countries-owned ISO 3166-1 alpha-2 country identity via `ISOCodex.Countries`
 - Lightweight postal code value object
 - Address model suitable for application/domain use
 - Country-specific address formatting via extension packages
 - Country-specific validation via `IAddressValidator`
 - Country-specific address profile metadata via `IAddressProfileProvider`
 - DI registration for validators, formatters, profile providers, and generic fallbacks
-- Opt-in generic fallbacks for valid ISO countries without country packs
+- Opt-in generic fallbacks for current countries known by `ISOCodex.Countries` without country packs
 - Zero built-in country rules; add country packages such as `ISOCodex.Addressing.GreatBritain`, `ISOCodex.Addressing.UnitedStates`, and `ISOCodex.Addressing.Canada`
 
 ## Installation
@@ -23,7 +23,7 @@ dotnet add package ISOCodex.Addressing
 ## Core types
 
 - `Address`
-- `CountryCode`
+- `Address.CountryCode` (`CountryAlpha2Code` from `ISOCodex.Countries`)
 - `PostalCode`
 - `IAddressFormatter`
 - `IAddressProfileProvider`
@@ -39,6 +39,7 @@ using ISOCodex.Addressing;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -58,6 +59,7 @@ var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider
 
 ```csharp
 using ISOCodex.Addressing;
+using ISOCodex.Countries;
 
 var address = new Address(
     line1: "10 Downing Street",
@@ -65,7 +67,7 @@ var address = new Address(
     city: "London",
     stateOrProvince: null,
     postalCode: new PostalCode("SW1A 2AA"),
-    countryCode: CountryCode.GB);
+    countryCode: CountryAlpha2Code.Parse("GB"));
 
 var result = validatorFactory
     .GetValidator(address.CountryCode)
@@ -258,9 +260,10 @@ Fields may include selectable `Options` when the package already has stable subd
 
 ```csharp
 using ISOCodex.Addressing.Profiles;
+using ISOCodex.Countries;
 
 var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
-var profile = profileProvider.GetProfile(CountryCode.GB);
+var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("GB"));
 
 foreach (var field in profile.Fields.OrderBy(field => field.DisplayOrder))
 {
@@ -336,7 +339,7 @@ Extension packages and applications can register additional country formatters:
 
 ```csharp
 services.AddAddressFormatter(
-    CountryCode.ES,
+    CountryAlpha2Code.Parse("ES"),
     () => new MySpanishAddressFormatter());
 ```
 
@@ -344,7 +347,7 @@ Custom formatters implement `ICountryAddressFormatter`. `IAddressFormatter` rema
 
 ## Unsupported countries and generic fallbacks
 
-`CountryCode` can represent any valid ISO 3166-1 alpha-2 country code. That lets consumers store the country accurately even before this package has country-specific rules for it.
+`Address.CountryCode` is a `CountryAlpha2Code` from `ISOCodex.Countries`. Construct it from canonical alpha-2 input, or resolve alpha-3, numeric, alias, or display-name input through `ISOCodex.Countries` at your application boundary before constructing an `Address`.
 
 Country-specific services are still explicit by default. If no formatter or validator is registered for an address's country, `IAddressFormatter.Format(...)` and `IAddressValidatorFactory.GetValidator(...)` throw. This is the right behaviour when an application expects strict, country-pack-backed handling.
 
@@ -358,15 +361,17 @@ services.AddGenericAddressingFallbacks();
 Registered country formatters and validators always take precedence. For unregistered countries, `AddGenericAddressingFallbacks()` registers:
 
 - `PermissiveAddressValidator` - returns success for any non-null `Address`
-- `GenericAddressFormatter` - emits `Line1`, optional `Line2`, `City StateOrProvince PostalCode`, and the ISO country code
+- `GenericAddressFormatter` - emits `Line1`, optional `Line2`, `City StateOrProvince PostalCode`, and the Countries English short name
 - generic `AddressProfile` metadata with `Source = GenericFallback`
+
+Fallbacks only apply to current countries known by `ISOCodex.Countries`. Special or non-country code elements such as `EU` do not use postal-address fallbacks, and alias-like values such as `UK` are not silently resolved to `GB`.
 
 Example output for a country without a specific formatter:
 
 ```text
 1 Rue de Rivoli
 Paris 75001
-FR
+France
 ```
 
 This is intended for store-first, import, migration, and validate-later workflows. It does not prove that an address exists or is deliverable.
@@ -382,7 +387,7 @@ The package does not prescribe a database schema, but consumers usually get the 
 Persist value objects as strings:
 
 - `PostalCode.Code` -> `PostalCode`
-- `CountryCode.Code` -> `CountryCode`
+- `Address.CountryCode.Value` -> `CountryCode`
 
 Suggested relational columns:
 
@@ -399,7 +404,7 @@ Recommended constraints:
 
 - `Line1`, `City`, `PostalCode`, and `CountryCode` should be required
 - `Line2` and `StateOrProvince` should be nullable
-- `CountryCode` should be exactly two uppercase ASCII letters
+- `CountryCode` should be exactly two uppercase ASCII letters and should be validated/canonicalised through `ISOCodex.Countries`
 - postal-code format should be validated in application code, not with database constraints
 - human-entered address fields should use Unicode string columns
 
@@ -463,11 +468,11 @@ Keep this metadata outside the `Address` value object. It belongs to the consumi
   "city": "London",
   "stateOrProvince": null,
   "postalCode": { "code": "SW1A 2AA" },
-  "countryCode": { "code": "GB" }
+  "countryCode": { "value": "GB" }
 }
 ```
 
-For public APIs or storage contracts that should expose scalar strings, map to an application DTO with `postalCode` and `countryCode` string properties.
+For public APIs or storage contracts that should expose scalar strings, map to an application DTO with `postalCode` and `countryCode` string properties. Use `CountryAlpha2Code.Parse(...)`, `CountryAlpha2Code.TryParse(...)`, or richer `ISOCodex.Countries` registry lookup at the boundary.
 
 ## Country-specific notes
 
@@ -490,7 +495,7 @@ For public APIs or storage contracts that should expose scalar strings, map to a
 
 ## Country packages
 
-Country support is provided through additional packages. The current repository contains country packages for Great Britain, United States, Canada, Spain, Ireland, and France. This core package contains no country-specific rules by itself.
+Country support is provided through additional packages. The current repository contains country packages for Great Britain, United States, Canada, Spain, Ireland, France, India, Brazil, Mexico, Germany, and Italy. This core package contains no country-specific rules by itself.
 
 ## Important behaviour
 
@@ -499,16 +504,16 @@ Country support is provided through additional packages. The current repository 
 - Formatting is performed by the country formatter registered for `Address.CountryCode`
 - Formatting does not mutate the address
 - Formatting does not validate the address or prove that it exists
-- Country package display names are currently English display names
+- Country display names come from `ISOCodex.Countries`
 - Validators normalize common postal-code casing and spacing for validation without changing the stored `PostalCode.Code`
 - `AddAddressing()` registers core services only; country packages register country-specific services
 - `AddGenericAddressingFallbacks()` is opt-in and keeps registered country-specific services ahead of generic behaviour
-- Persistence should store `PostalCode.Code` and `CountryCode.Code` as strings
+- Persistence should store `PostalCode.Code` and `Address.CountryCode.Value` as strings
 - Validation status is application state and should be stored separately from the `Address` value
 
 ## Compatibility policy
 
-From `1.0.0`, public types, method signatures, value-object behaviour, and validation issue codes are treated as compatibility-sensitive.
+From `1.0.0`, public types, method signatures, value-object behaviour, and validation issue codes are treated as compatibility-sensitive. Version `2.0.0-alpha` intentionally makes the breaking move from Addressing-owned country identity to `ISOCodex.Countries`.
 
 Patch and minor releases may add new countries, metadata, helper APIs, validation cases, and documentation. They may also correct country-specific formatting or validation behaviour where the existing behaviour is demonstrably wrong.
 

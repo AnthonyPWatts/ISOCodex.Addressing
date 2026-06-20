@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,15 @@ namespace ISOCodex.Addressing.Germany
         public static IServiceCollection AddGermanyAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.DE,
+                CountryAlpha2Code.Parse("DE"),
                 () => new GermanyAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.DE,
+                CountryAlpha2Code.Parse("DE"),
                 () => new GermanyAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.DE,
+                CountryAlpha2Code.Parse("DE"),
                 CreateGermanyAddressProfile);
 
             return services;
@@ -27,7 +28,7 @@ namespace ISOCodex.Addressing.Germany
         private static AddressProfile CreateGermanyAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.DE,
+                CountryAlpha2Code.Parse("DE"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Street address", true, 10, "Pariser Platz 1"),

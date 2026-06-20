@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Profiles;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ISOCodex.Addressing.Ireland
@@ -8,15 +9,15 @@ namespace ISOCodex.Addressing.Ireland
         public static IServiceCollection AddIrelandAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.IE,
+                CountryAlpha2Code.Parse("IE"),
                 () => new IrelandAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.IE,
+                CountryAlpha2Code.Parse("IE"),
                 () => new IrelandAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.IE,
+                CountryAlpha2Code.Parse("IE"),
                 CreateIrelandAddressProfile);
 
             return services;
@@ -25,7 +26,7 @@ namespace ISOCodex.Addressing.Ireland
         private static AddressProfile CreateIrelandAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.IE,
+                CountryAlpha2Code.Parse("IE"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "1 College Green"),

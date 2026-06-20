@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Canada;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +23,7 @@ public class CaAddressValidationIntegrationTests
             "Ottawa",
             "ON",
             new PostalCode("K1A 0A9"),
-            CountryCode.CA);
+            CountryAlpha2Code.Parse("CA"));
 
         var result = factory.GetValidator(address.CountryCode).Validate(address);
 

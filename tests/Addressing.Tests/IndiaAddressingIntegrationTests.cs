@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.India;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
@@ -24,10 +25,10 @@ public class IndiaAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.IN).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("IN")).Validate(address).IsValid);
         Assert.Equal("Rashtrapati Bhavan\nNew Delhi 110004\nDL\nIndia", formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.IN);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("IN"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("PIN code", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         var administrativeArea = profile.Fields.Single(field => field.Field == AddressField.AdministrativeArea);
@@ -65,7 +66,7 @@ public class IndiaAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.BR));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("BR")));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Issues, issue => issue.Code == "Address.CountryCode.Invalid");
@@ -110,7 +111,7 @@ public class IndiaAddressingIntegrationTests
         string city = "New Delhi",
         string? stateOrProvince = "DL",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -118,7 +119,7 @@ public class IndiaAddressingIntegrationTests
             city,
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("110004") : postalCode,
-            countryCode.Equals(default) ? CountryCode.IN : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("IN") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
@@ -129,6 +130,6 @@ public class IndiaAddressingIntegrationTests
             "New Delhi",
             "DL",
             default,
-            CountryCode.IN);
+            CountryAlpha2Code.Parse("IN"));
     }
 }

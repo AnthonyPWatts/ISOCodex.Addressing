@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.UnitedStates;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Tests;
 
@@ -79,7 +80,7 @@ public class USAddressValidatorTests
             "Washington",
             "DC",
             default,
-            CountryCode.US));
+            CountryAlpha2Code.Parse("US")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -90,7 +91,7 @@ public class USAddressValidatorTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.CA));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("CA")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -101,7 +102,7 @@ public class USAddressValidatorTests
     private static Address CreateAddress(
         string? stateOrProvince = "DC",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             "1600 Pennsylvania Avenue NW",
@@ -109,6 +110,6 @@ public class USAddressValidatorTests
             "Washington",
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("20500") : postalCode,
-            countryCode.Equals(default) ? CountryCode.US : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("US") : countryCode);
     }
 }

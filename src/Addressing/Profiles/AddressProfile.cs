@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ISOCodex.Countries;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -7,7 +8,7 @@ namespace ISOCodex.Addressing.Profiles
     public sealed class AddressProfile
     {
         public AddressProfile(
-            CountryCode countryCode,
+            CountryAlpha2Code countryCode,
             IEnumerable<AddressFieldProfile> fields,
             AddressProfileSource source = AddressProfileSource.CountrySpecific,
             string? examplePostalCode = null,
@@ -20,7 +21,7 @@ namespace ISOCodex.Addressing.Profiles
             ExampleFormattedAddress = exampleFormattedAddress;
         }
 
-        public CountryCode CountryCode { get; }
+        public CountryAlpha2Code CountryCode { get; }
 
         public AddressProfileSource Source { get; }
 
@@ -30,7 +31,7 @@ namespace ISOCodex.Addressing.Profiles
 
         public string? ExampleFormattedAddress { get; }
 
-        internal AddressProfile ForCountry(CountryCode countryCode)
+        internal AddressProfile ForCountry(CountryAlpha2Code countryCode)
         {
             return new AddressProfile(
                 countryCode,

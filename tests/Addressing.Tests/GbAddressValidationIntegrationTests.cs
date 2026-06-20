@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.GreatBritain;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +23,7 @@ public class GbAddressValidationIntegrationTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         var result = factory.GetValidator(address.CountryCode).Validate(address);
 

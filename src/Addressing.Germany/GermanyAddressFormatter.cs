@@ -17,7 +17,7 @@ namespace ISOCodex.Addressing.Germany
                 lines,
                 AddressFormatting.JoinParts(" ", address.PostalCode.Code, address.City));
 
-            return AddressFormatting.FormatLines(lines, "Germany", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Mexico;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
@@ -24,10 +25,10 @@ public class MexicoAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.MX).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("MX")).Validate(address).IsValid);
         Assert.Equal("Palacio Nacional\n06066 Ciudad de México, CMX\nMexico", formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.MX);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("MX"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("Postal code", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         var administrativeArea = profile.Fields.Single(field => field.Field == AddressField.AdministrativeArea);
@@ -73,7 +74,7 @@ public class MexicoAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.BR));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("BR")));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Issues, issue => issue.Code == "Address.CountryCode.Invalid");
@@ -118,7 +119,7 @@ public class MexicoAddressingIntegrationTests
         string city = "Ciudad de México",
         string? stateOrProvince = "CMX",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -126,11 +127,11 @@ public class MexicoAddressingIntegrationTests
             city,
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("06066") : postalCode,
-            countryCode.Equals(default) ? CountryCode.MX : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("MX") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
     {
-        return new Address("Palacio Nacional", null, "Ciudad de México", "CMX", default, CountryCode.MX);
+        return new Address("Palacio Nacional", null, "Ciudad de México", "CMX", default, CountryAlpha2Code.Parse("MX"));
     }
 }

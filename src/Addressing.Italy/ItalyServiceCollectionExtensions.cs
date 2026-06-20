@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,15 @@ namespace ISOCodex.Addressing.Italy
         public static IServiceCollection AddItalyAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.IT,
+                CountryAlpha2Code.Parse("IT"),
                 () => new ItalyAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.IT,
+                CountryAlpha2Code.Parse("IT"),
                 () => new ItalyAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.IT,
+                CountryAlpha2Code.Parse("IT"),
                 CreateItalyAddressProfile);
 
             return services;
@@ -27,7 +28,7 @@ namespace ISOCodex.Addressing.Italy
         private static AddressProfile CreateItalyAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.IT,
+                CountryAlpha2Code.Parse("IT"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "Piazza del Colosseo 1"),

@@ -27,6 +27,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Ireland;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -46,14 +47,14 @@ var address = new Address(
     city: "Dublin",
     stateOrProvince: null,
     postalCode: new PostalCode("D02 X285"),
-    countryCode: CountryCode.IE);
+    countryCode: CountryAlpha2Code.Parse("IE"));
 
 var validationResult = validatorFactory
-    .GetValidator(CountryCode.IE)
+    .GetValidator(CountryAlpha2Code.Parse("IE"))
     .Validate(address);
 
 var formatted = formatter.Format(address);
-var profile = profileProvider.GetProfile(CountryCode.IE);
+var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("IE"));
 ```
 
 Default formatted output:

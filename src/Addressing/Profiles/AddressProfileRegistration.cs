@@ -1,18 +1,19 @@
 using System;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Profiles
 {
     internal sealed class AddressProfileRegistration
     {
         public AddressProfileRegistration(
-            CountryCode country,
+            CountryAlpha2Code country,
             Func<AddressProfile> createProfile)
         {
             Country = country;
             CreateProfile = createProfile;
         }
 
-        public CountryCode Country { get; }
+        public CountryAlpha2Code Country { get; }
 
         public Func<AddressProfile> CreateProfile { get; }
     }

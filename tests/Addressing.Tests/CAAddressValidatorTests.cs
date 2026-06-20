@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Canada;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Tests;
 
@@ -76,7 +77,7 @@ public class CAAddressValidatorTests
             "Ottawa",
             "ON",
             default,
-            CountryCode.CA));
+            CountryAlpha2Code.Parse("CA")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -87,7 +88,7 @@ public class CAAddressValidatorTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.US));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("US")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -98,7 +99,7 @@ public class CAAddressValidatorTests
     private static Address CreateAddress(
         string? stateOrProvince = "ON",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             "111 Wellington St",
@@ -106,6 +107,6 @@ public class CAAddressValidatorTests
             "Ottawa",
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("K1A 0A9") : postalCode,
-            countryCode.Equals(default) ? CountryCode.CA : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("CA") : countryCode);
     }
 }

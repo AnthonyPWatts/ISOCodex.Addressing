@@ -17,7 +17,7 @@ namespace ISOCodex.Addressing.Spain
                 lines,
                 AddressFormatting.JoinParts(" ", address.PostalCode.Code, address.City));
 
-            return AddressFormatting.FormatLines(lines, "Spain", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ISOCodex.Addressing.Mexico
                     AddressFormatting.JoinParts(" ", address.PostalCode.Code, address.City),
                     address.StateOrProvince));
 
-            return AddressFormatting.FormatLines(lines, "Mexico", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

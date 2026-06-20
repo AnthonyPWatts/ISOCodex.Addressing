@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.UnitedStates;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +23,7 @@ public class UsAddressValidationIntegrationTests
             "Washington",
             "DC",
             new PostalCode("20500"),
-            CountryCode.US);
+            CountryAlpha2Code.Parse("US"));
 
         var result = factory.GetValidator(address.CountryCode).Validate(address);
 

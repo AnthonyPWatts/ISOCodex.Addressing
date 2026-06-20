@@ -1,4 +1,5 @@
 using System.Linq;
+using ISOCodex.Countries;
 using System.Reflection;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Ireland;
@@ -63,7 +64,7 @@ public class IrelandAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.FR));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("FR")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -86,12 +87,12 @@ public class IrelandAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.IE).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("IE")).Validate(address).IsValid);
         Assert.Equal(
             "1 College Green\nDublin\nD02 X285\nIreland",
             formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.IE);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("IE"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("Eircode", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         Assert.Equal("Town / City", profile.Fields.Single(field => field.Field == AddressField.Locality).Label);
@@ -125,7 +126,7 @@ public class IrelandAddressingIntegrationTests
         string? line2 = null,
         string city = "Dublin",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -133,7 +134,7 @@ public class IrelandAddressingIntegrationTests
             city,
             null,
             postalCode.Equals(default) ? new PostalCode("D02 X285") : postalCode,
-            countryCode.Equals(default) ? CountryCode.IE : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("IE") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
@@ -144,7 +145,7 @@ public class IrelandAddressingIntegrationTests
             "Dublin",
             null,
             default,
-            CountryCode.IE);
+            CountryAlpha2Code.Parse("IE"));
     }
 
     private static Address CreateInvalidAddress(string? line1 = null, string? city = null)

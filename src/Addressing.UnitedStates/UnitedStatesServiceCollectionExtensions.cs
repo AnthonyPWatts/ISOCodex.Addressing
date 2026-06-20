@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,15 +38,15 @@ namespace ISOCodex.Addressing.UnitedStates
         public static IServiceCollection AddUnitedStatesAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.US,
+                CountryAlpha2Code.Parse("US"),
                 () => new USAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.US,
+                CountryAlpha2Code.Parse("US"),
                 () => new USAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.US,
+                CountryAlpha2Code.Parse("US"),
                 CreateUnitedStatesAddressProfile);
 
             return services;
@@ -54,7 +55,7 @@ namespace ISOCodex.Addressing.UnitedStates
         private static AddressProfile CreateUnitedStatesAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.US,
+                CountryAlpha2Code.Parse("US"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Street address", true, 10, "1600 Pennsylvania Avenue NW"),

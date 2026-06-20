@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Spain;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
@@ -53,7 +54,7 @@ public class SpainAddressingIntegrationTests
             "Madrid",
             "Madrid",
             default,
-            CountryCode.ES));
+            CountryAlpha2Code.Parse("ES")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -64,7 +65,7 @@ public class SpainAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.FR));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("FR")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -89,9 +90,9 @@ public class SpainAddressingIntegrationTests
             "Madrid",
             "Madrid",
             new PostalCode("28013"),
-            CountryCode.ES);
+            CountryAlpha2Code.Parse("ES"));
 
-        var result = factory.GetValidator(CountryCode.ES).Validate(address);
+        var result = factory.GetValidator(CountryAlpha2Code.Parse("ES")).Validate(address);
 
         Assert.True(result.IsValid);
     }
@@ -113,9 +114,9 @@ public class SpainAddressingIntegrationTests
             "Madrid",
             "Barcelona",
             new PostalCode("28013"),
-            CountryCode.ES);
+            CountryAlpha2Code.Parse("ES"));
 
-        var result = factory.GetValidator(CountryCode.ES).Validate(address);
+        var result = factory.GetValidator(CountryAlpha2Code.Parse("ES")).Validate(address);
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -140,7 +141,7 @@ public class SpainAddressingIntegrationTests
             "Madrid",
             "Madrid",
             new PostalCode("28013"),
-            CountryCode.ES);
+            CountryAlpha2Code.Parse("ES"));
 
         Assert.Equal(
             "Calle Mayor 1\n28013 Madrid\nSpain",
@@ -158,7 +159,7 @@ public class SpainAddressingIntegrationTests
         using var serviceProvider = services.BuildServiceProvider();
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
 
-        var profile = profileProvider.GetProfile(CountryCode.ES);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("ES"));
 
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("Provincia", profile.Fields.Single(field => field.Field == AddressField.AdministrativeArea).Label);
@@ -195,7 +196,7 @@ public class SpainAddressingIntegrationTests
         string city = "Madrid",
         string? stateOrProvince = "Madrid",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -203,6 +204,6 @@ public class SpainAddressingIntegrationTests
             city,
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("28013") : postalCode,
-            countryCode.Equals(default) ? CountryCode.ES : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("ES") : countryCode);
     }
 }

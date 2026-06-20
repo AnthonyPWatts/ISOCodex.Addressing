@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,15 @@ namespace ISOCodex.Addressing.Mexico
         public static IServiceCollection AddMexicoAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.MX,
+                CountryAlpha2Code.Parse("MX"),
                 () => new MexicoAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.MX,
+                CountryAlpha2Code.Parse("MX"),
                 () => new MexicoAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.MX,
+                CountryAlpha2Code.Parse("MX"),
                 CreateMexicoAddressProfile);
 
             return services;
@@ -27,7 +28,7 @@ namespace ISOCodex.Addressing.Mexico
         private static AddressProfile CreateMexicoAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.MX,
+                CountryAlpha2Code.Parse("MX"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "Palacio Nacional"),

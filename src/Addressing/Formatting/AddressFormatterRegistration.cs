@@ -1,18 +1,19 @@
 using System;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Formatting
 {
     internal sealed class AddressFormatterRegistration
     {
         public AddressFormatterRegistration(
-            CountryCode country,
+            CountryAlpha2Code country,
             Func<ICountryAddressFormatter> createFormatter)
         {
             Country = country;
             CreateFormatter = createFormatter;
         }
 
-        public CountryCode Country { get; }
+        public CountryAlpha2Code Country { get; }
 
         public Func<ICountryAddressFormatter> CreateFormatter { get; }
     }

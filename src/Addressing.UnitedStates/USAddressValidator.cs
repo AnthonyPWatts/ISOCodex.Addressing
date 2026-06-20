@@ -1,4 +1,5 @@
 using System;
+using ISOCodex.Countries;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ISOCodex.Addressing.Validation;
@@ -22,7 +23,7 @@ namespace ISOCodex.Addressing.UnitedStates
         public AddressValidationResult Validate(Address? address)
         {
             var issues = new List<AddressValidationIssue>();
-            AddressValidationIssues.AddCommonIssues(issues, address, CountryCode.US, "US");
+            AddressValidationIssues.AddCommonIssues(issues, address, CountryAlpha2Code.Parse("US"), "US");
 
             if (address == null)
             {

@@ -18,7 +18,7 @@ namespace ISOCodex.Addressing.India
                 AddressFormatting.JoinParts(" ", address.City, address.PostalCode.Code));
             AddressFormatting.AddIfNotWhiteSpace(lines, address.StateOrProvince);
 
-            return AddressFormatting.FormatLines(lines, "India", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

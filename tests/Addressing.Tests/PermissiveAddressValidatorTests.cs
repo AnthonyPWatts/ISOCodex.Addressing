@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Validation.Validators;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Tests;
 
@@ -14,7 +15,7 @@ public class PermissiveAddressValidatorTests
             "Paris",
             null,
             new PostalCode("75001"),
-            CountryCode.Parse("FR"));
+            CountryAlpha2Code.Parse("FR"));
 
         var result = validator.Validate(address);
 

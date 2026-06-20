@@ -17,7 +17,7 @@ services.AddUnitedStatesAddressing();
 
 ## What it provides
 
-- `CountryCode.US` validator registration.
+- `US` validator registration.
 - United States address formatter.
 - United States address profile metadata for forms.
 - ZIP and ZIP+4 validation.
@@ -27,14 +27,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "1600 Pennsylvania Avenue NW",
     null,
     "Washington",
     "DC",
     new PostalCode("20500"),
-    CountryCode.US);
+    CountryAlpha2Code.Parse("US"));
 ```
 
 Formatted output:

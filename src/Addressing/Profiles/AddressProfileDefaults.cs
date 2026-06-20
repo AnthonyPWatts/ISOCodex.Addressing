@@ -1,3 +1,5 @@
+using ISOCodex.Countries;
+
 namespace ISOCodex.Addressing.Profiles
 {
     internal static class AddressProfileDefaults
@@ -5,7 +7,7 @@ namespace ISOCodex.Addressing.Profiles
         public static AddressProfile CreateGenericFallbackProfile()
         {
             return new AddressProfile(
-                CountryCode.GB,
+                CountryAlpha2Code.Parse("GB"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10),

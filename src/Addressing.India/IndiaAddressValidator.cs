@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ISOCodex.Countries;
 using System.Text.RegularExpressions;
 using ISOCodex.Addressing.Validation;
 
@@ -12,7 +13,7 @@ namespace ISOCodex.Addressing.India
         public AddressValidationResult Validate(Address? address)
         {
             var issues = new List<AddressValidationIssue>();
-            AddressValidationIssues.AddCommonIssues(issues, address, CountryCode.IN, "Indian");
+            AddressValidationIssues.AddCommonIssues(issues, address, CountryAlpha2Code.Parse("IN"), "Indian");
 
             if (address == null)
             {

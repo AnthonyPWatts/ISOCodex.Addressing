@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Germany;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
@@ -24,10 +25,10 @@ public class GermanyAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.DE).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("DE")).Validate(address).IsValid);
         Assert.Equal("Pariser Platz 1\n10117 Berlin\nGermany", formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.DE);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("DE"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("Postcode", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         Assert.DoesNotContain(profile.Fields, field => field.Field == AddressField.AdministrativeArea && field.IsRequired);
@@ -62,7 +63,7 @@ public class GermanyAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.IT));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("IT")));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Issues, issue => issue.Code == "Address.CountryCode.Invalid");
@@ -102,7 +103,7 @@ public class GermanyAddressingIntegrationTests
         string city = "Berlin",
         string? stateOrProvince = null,
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -110,11 +111,11 @@ public class GermanyAddressingIntegrationTests
             city,
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("10117") : postalCode,
-            countryCode.Equals(default) ? CountryCode.DE : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("DE") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
     {
-        return new Address("Pariser Platz 1", null, "Berlin", null, default, CountryCode.DE);
+        return new Address("Pariser Platz 1", null, "Berlin", null, default, CountryAlpha2Code.Parse("DE"));
     }
 }

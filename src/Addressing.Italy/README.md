@@ -17,7 +17,7 @@ services.AddItalyAddressing();
 
 ## What it provides
 
-- `CountryCode.IT` validator registration.
+- `IT` validator registration.
 - Italy address formatter.
 - Italy address profile metadata for forms.
 - Five-digit CAP validation.
@@ -27,14 +27,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "Piazza del Colosseo 1",
     null,
     "Roma",
     "RM",
     new PostalCode("00184"),
-    CountryCode.IT);
+    CountryAlpha2Code.Parse("IT"));
 ```
 
 Formatted output:

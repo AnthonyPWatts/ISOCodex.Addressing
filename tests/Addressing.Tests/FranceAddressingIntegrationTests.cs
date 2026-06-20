@@ -1,4 +1,5 @@
 using System.Linq;
+using ISOCodex.Countries;
 using System.Reflection;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.France;
@@ -78,7 +79,7 @@ public class FranceAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.IE));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("IE")));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -101,12 +102,12 @@ public class FranceAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.FR).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("FR")).Validate(address).IsValid);
         Assert.Equal(
             "10 Rue de Rivoli\n75001 Paris\nFrance",
             formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.FR);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("FR"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("Postal code", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         Assert.Equal("City / Commune", profile.Fields.Single(field => field.Field == AddressField.Locality).Label);
@@ -140,7 +141,7 @@ public class FranceAddressingIntegrationTests
         string? line2 = null,
         string city = "Paris",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -148,7 +149,7 @@ public class FranceAddressingIntegrationTests
             city,
             null,
             postalCode.Equals(default) ? new PostalCode("75001") : postalCode,
-            countryCode.Equals(default) ? CountryCode.FR : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("FR") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
@@ -159,7 +160,7 @@ public class FranceAddressingIntegrationTests
             "Paris",
             null,
             default,
-            CountryCode.FR);
+            CountryAlpha2Code.Parse("FR"));
     }
 
     private static Address CreateInvalidAddress(string? line1 = null, string? city = null)

@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Canada;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Formatting.Formatters;
 using ISOCodex.Addressing.GreatBritain;
@@ -13,7 +14,7 @@ public class AddressFormatterTests
     public void Format_WithRegisteredGbFormatter_ReturnsMultiLineAddress()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.GB, new GBAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("GB"), new GBAddressFormatter());
 
         var address = new Address(
             "10 Downing Street",
@@ -21,7 +22,7 @@ public class AddressFormatterTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         var result = formatter.Format(address);
 
@@ -34,7 +35,7 @@ public class AddressFormatterTests
     public void Format_WithSingleLineOptions_ReturnsSingleLineAddress()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.US, new USAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("US"), new USAddressFormatter());
 
         var address = new Address(
             "1600 Pennsylvania Avenue NW",
@@ -42,7 +43,7 @@ public class AddressFormatterTests
             "Washington",
             "DC",
             new PostalCode("20500"),
-            CountryCode.US);
+            CountryAlpha2Code.Parse("US"));
 
         var result = formatter.Format(
             address,
@@ -60,7 +61,7 @@ public class AddressFormatterTests
     public void Format_WithLine2_IncludesLine2()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.GB, new GBAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("GB"), new GBAddressFormatter());
 
         var address = new Address(
             "Buckingham Palace",
@@ -68,7 +69,7 @@ public class AddressFormatterTests
             "London",
             null,
             new PostalCode("SW1A 1AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         var result = formatter.Format(address);
 
@@ -81,7 +82,7 @@ public class AddressFormatterTests
     public void Format_WithWhiteSpaceLine2_SkipsLine2()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.GB, new GBAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("GB"), new GBAddressFormatter());
 
         var address = new Address(
             "10 Downing Street",
@@ -89,7 +90,7 @@ public class AddressFormatterTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         var result = formatter.Format(address);
 
@@ -102,7 +103,7 @@ public class AddressFormatterTests
     public void Format_WithCustomSingleLineSeparator_UsesSeparator()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.US, new USAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("US"), new USAddressFormatter());
 
         var address = new Address(
             "1600 Pennsylvania Avenue NW",
@@ -110,7 +111,7 @@ public class AddressFormatterTests
             "Washington",
             "DC",
             new PostalCode("20500"),
-            CountryCode.US);
+            CountryAlpha2Code.Parse("US"));
 
         var result = formatter.Format(
             address,
@@ -129,7 +130,7 @@ public class AddressFormatterTests
     public void Format_WithIncludeCountryFalse_ExcludesCountry()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.CA, new CAAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("CA"), new CAAddressFormatter());
 
         var address = new Address(
             "111 Wellington Street",
@@ -137,7 +138,7 @@ public class AddressFormatterTests
             "Ottawa",
             "ON",
             new PostalCode("K1A 0A9"),
-            CountryCode.CA);
+            CountryAlpha2Code.Parse("CA"));
 
         var result = formatter.Format(
             address,
@@ -167,7 +168,7 @@ public class AddressFormatterTests
             "Madrid",
             "Madrid",
             new PostalCode("28013"),
-            CountryCode.ES);
+            CountryAlpha2Code.Parse("ES"));
 
         var ex = Assert.Throws<InvalidOperationException>(() => formatter.Format(address));
 
@@ -186,18 +187,39 @@ public class AddressFormatterTests
             "Paris",
             null,
             new PostalCode("75001"),
-            CountryCode.Parse("FR"));
+            CountryAlpha2Code.Parse("FR"));
 
         var result = formatter.Format(address);
 
-        Assert.Equal("1 Rue de Rivoli\nParis 75001\nFR", result);
+        Assert.Equal("1 Rue de Rivoli\nParis 75001\nFrance", result);
+    }
+
+    [Theory]
+    [InlineData("EU")]
+    [InlineData("UK")]
+    public void Format_WhenFallbackFormatterRegistered_DoesNotFormatNonDeliverableCountryCodes(string countryCode)
+    {
+        var formatter = new AddressFormatter();
+        formatter.RegisterFallbackFormatter(new GenericAddressFormatter());
+
+        var address = new Address(
+            "1 Example Street",
+            null,
+            "Example City",
+            null,
+            new PostalCode("12345"),
+            CountryAlpha2Code.Parse(countryCode));
+
+        var ex = Assert.Throws<InvalidOperationException>(() => formatter.Format(address));
+
+        Assert.Contains(countryCode, ex.Message);
     }
 
     [Fact]
     public void Format_WhenCountryAndFallbackFormatterRegistered_UsesCountryFormatter()
     {
         var formatter = new AddressFormatter();
-        formatter.RegisterFormatter(CountryCode.GB, new GBAddressFormatter());
+        formatter.RegisterFormatter(CountryAlpha2Code.Parse("GB"), new GBAddressFormatter());
         formatter.RegisterFallbackFormatter(new GenericAddressFormatter());
 
         var address = new Address(
@@ -206,7 +228,7 @@ public class AddressFormatterTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         var result = formatter.Format(address);
 
@@ -231,7 +253,7 @@ public class AddressFormatterTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         Assert.Equal(
             "10 Downing Street\nLondon\nSW1A 2AA\nUnited Kingdom",
@@ -242,7 +264,7 @@ public class AddressFormatterTests
     public void AddAddressFormatter_WithCustomFormatter_RegistersFormatter()
     {
         var services = new ServiceCollection();
-        services.AddAddressFormatter(CountryCode.ES, () => new TestCountryAddressFormatter());
+        services.AddAddressFormatter(CountryAlpha2Code.Parse("ES"), () => new TestCountryAddressFormatter());
 
         using var serviceProvider = services.BuildServiceProvider();
         var formatter = serviceProvider.GetRequiredService<IAddressFormatter>();
@@ -253,7 +275,7 @@ public class AddressFormatterTests
             "Madrid",
             "Madrid",
             new PostalCode("28013"),
-            CountryCode.ES);
+            CountryAlpha2Code.Parse("ES"));
 
         Assert.Equal("custom format", formatter.Format(address));
     }
@@ -273,9 +295,9 @@ public class AddressFormatterTests
             "Paris",
             null,
             new PostalCode("75001"),
-            CountryCode.Parse("FR"));
+            CountryAlpha2Code.Parse("FR"));
 
-        Assert.Equal("1 Rue de Rivoli\nParis 75001\nFR", formatter.Format(address));
+        Assert.Equal("1 Rue de Rivoli\nParis 75001\nFrance", formatter.Format(address));
     }
 
     private sealed class TestCountryAddressFormatter : ICountryAddressFormatter

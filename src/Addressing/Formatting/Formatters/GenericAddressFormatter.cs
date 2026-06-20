@@ -20,7 +20,10 @@ namespace ISOCodex.Addressing.Formatting.Formatters
                     address.StateOrProvince,
                     address.PostalCode.Code));
 
-            return AddressFormatting.FormatLines(lines, address.CountryCode.Code, options);
+            return AddressFormatting.FormatLines(
+                lines,
+                AddressFormatting.GetCountryLine(address.CountryCode),
+                options);
         }
     }
 }

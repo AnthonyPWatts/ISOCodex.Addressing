@@ -17,7 +17,7 @@ services.AddCanadaAddressing();
 
 ## What it provides
 
-- `CountryCode.CA` validator registration.
+- `CA` validator registration.
 - Canada address formatter.
 - Canada address profile metadata for forms.
 - Canadian postal-code structure validation with internal case/spacing normalisation.
@@ -27,14 +27,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "111 Wellington Street",
     null,
     "Ottawa",
     "ON",
     new PostalCode("K1A 0A6"),
-    CountryCode.CA);
+    CountryAlpha2Code.Parse("CA"));
 ```
 
 Formatted output:

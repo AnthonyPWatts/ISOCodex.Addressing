@@ -1,4 +1,5 @@
 using ISOCodex.Addressing;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.GreatBritain;
 using ISOCodex.Addressing.Spain;
 using ISOCodex.Addressing.UnitedStates;
@@ -16,7 +17,7 @@ var spanishAddress = new Address(
     "Madrid",
     null,
     new PostalCode("28001"),
-    CountryCode.ES);
+    CountryAlpha2Code.Parse("ES"));
 
 addressValidatorFactory.GetValidator(spanishAddress.CountryCode).Validate(spanishAddress);
 Console.WriteLine("Spanish address is valid!");
@@ -27,7 +28,7 @@ var ukAddress = new Address(
     "London",
     null,
     new PostalCode("SW1A 2AA"),
-    CountryCode.GB);
+    CountryAlpha2Code.Parse("GB"));
 
 addressValidatorFactory.GetValidator(ukAddress.CountryCode).Validate(ukAddress);
 Console.WriteLine("UK address is valid!");

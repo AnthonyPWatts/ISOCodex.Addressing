@@ -1,4 +1,5 @@
 using System.Linq;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.GreatBritain;
 using ISOCodex.Addressing.Spain;
 using ISOCodex.Addressing.UnitedStates;
@@ -27,7 +28,7 @@ public class AddressValidationIssueCodeContractTests
                 "London",
                 null,
                 new PostalCode("BADCODE"),
-                CountryCode.GB));
+                CountryAlpha2Code.Parse("GB")));
 
         AssertCodes(result.Issues.Select(issue => issue.Code),
             "Address.PostalCode.Invalid");
@@ -43,7 +44,7 @@ public class AddressValidationIssueCodeContractTests
                 "Washington",
                 "DC",
                 new PostalCode("20500"),
-                CountryCode.US));
+                CountryAlpha2Code.Parse("US")));
 
         Assert.Contains(
             result.Issues,
@@ -60,7 +61,7 @@ public class AddressValidationIssueCodeContractTests
                 "Washington",
                 "XX",
                 new PostalCode("20500"),
-                CountryCode.US));
+                CountryAlpha2Code.Parse("US")));
 
         AssertCodes(result.Issues.Select(issue => issue.Code),
             "Address.StateOrProvince.Invalid");
@@ -85,7 +86,7 @@ public class AddressValidationIssueCodeContractTests
                 "Madrid",
                 "Barcelona",
                 new PostalCode("28013"),
-                CountryCode.ES));
+                CountryAlpha2Code.Parse("ES")));
 
         AssertCodes(result.Issues.Select(issue => issue.Code),
             "Address.PostalCode.ProvinceMismatch");

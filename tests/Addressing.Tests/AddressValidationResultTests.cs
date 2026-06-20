@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.GreatBritain;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.UnitedStates;
 using ISOCodex.Addressing.Validation;
 
@@ -16,7 +17,7 @@ public class AddressValidationResultTests
             "London",
             null,
             new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+            CountryAlpha2Code.Parse("GB"));
 
         var result = validator.Validate(address);
 
@@ -34,7 +35,7 @@ public class AddressValidationResultTests
             "Washington",
             null,
             new PostalCode("BAD"),
-            CountryCode.CA);
+            CountryAlpha2Code.Parse("CA"));
 
         var result = validator.Validate(address);
 
@@ -69,16 +70,16 @@ public class AddressValidationResultTests
     public void FactoryValidator_CanReturnStructuredValidationResult()
     {
         var factory = new AddressValidatorFactory();
-        factory.RegisterValidator(CountryCode.US, new USAddressValidator());
+        factory.RegisterValidator(CountryAlpha2Code.Parse("US"), new USAddressValidator());
         var address = new Address(
             "1600 Pennsylvania Avenue NW",
             null,
             "Washington",
             null,
             new PostalCode("BAD"),
-            CountryCode.US);
+            CountryAlpha2Code.Parse("US"));
 
-        var result = factory.GetValidator(CountryCode.US).Validate(address);
+        var result = factory.GetValidator(CountryAlpha2Code.Parse("US")).Validate(address);
 
         Assert.False(result.IsValid);
         Assert.Contains(

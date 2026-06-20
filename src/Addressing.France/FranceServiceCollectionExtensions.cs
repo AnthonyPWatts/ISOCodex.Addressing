@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Profiles;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ISOCodex.Addressing.France
@@ -8,15 +9,15 @@ namespace ISOCodex.Addressing.France
         public static IServiceCollection AddFranceAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.FR,
+                CountryAlpha2Code.Parse("FR"),
                 () => new FranceAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.FR,
+                CountryAlpha2Code.Parse("FR"),
                 () => new FranceAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.FR,
+                CountryAlpha2Code.Parse("FR"),
                 CreateFranceAddressProfile);
 
             return services;
@@ -25,7 +26,7 @@ namespace ISOCodex.Addressing.France
         private static AddressProfile CreateFranceAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.FR,
+                CountryAlpha2Code.Parse("FR"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "10 Rue de Rivoli"),

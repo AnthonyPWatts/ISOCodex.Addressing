@@ -1,4 +1,5 @@
 using System;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing
 {
@@ -9,7 +10,7 @@ namespace ISOCodex.Addressing
         public string City { get; }
         public string? StateOrProvince { get; }
         public PostalCode PostalCode { get; }
-        public CountryCode CountryCode { get; }
+        public CountryAlpha2Code CountryCode { get; }
 
         public Address(
             string line1,
@@ -17,7 +18,7 @@ namespace ISOCodex.Addressing
             string city,
             string? stateOrProvince,
             PostalCode postalCode,
-            CountryCode countryCode)
+            CountryAlpha2Code countryCode)
         {
             if (string.IsNullOrWhiteSpace(line1))
             {

@@ -8,12 +8,13 @@
     <RootNamespace>ISOCodex.Addressing</RootNamespace>
 
     <PackageId>ISOCodex.Addressing</PackageId>
-    <Description>Domain model for international addresses and ISO 3166-1 country codes.</Description>
+    <Description>Domain model, formatting, and validation for international postal addresses.</Description>
     <PackageTags>address countrycode iso3166 domain-driven-design value-object</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ISOCodex.Countries" Version="1.0.0-alpha" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,15 @@ namespace ISOCodex.Addressing.GreatBritain
         public static IServiceCollection AddGreatBritainAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.GB,
+                CountryAlpha2Code.Parse("GB"),
                 () => new GBAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.GB,
+                CountryAlpha2Code.Parse("GB"),
                 () => new GBAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.GB,
+                CountryAlpha2Code.Parse("GB"),
                 CreateGreatBritainAddressProfile);
 
             return services;
@@ -27,7 +28,7 @@ namespace ISOCodex.Addressing.GreatBritain
         private static AddressProfile CreateGreatBritainAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.GB,
+                CountryAlpha2Code.Parse("GB"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "10 Downing Street"),

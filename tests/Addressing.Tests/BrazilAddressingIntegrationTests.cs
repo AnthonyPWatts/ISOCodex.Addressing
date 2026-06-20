@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Brazil;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
@@ -24,10 +25,10 @@ public class BrazilAddressingIntegrationTests
         var profileProvider = serviceProvider.GetRequiredService<IAddressProfileProvider>();
         var address = CreateAddress();
 
-        Assert.True(validatorFactory.GetValidator(CountryCode.BR).Validate(address).IsValid);
+        Assert.True(validatorFactory.GetValidator(CountryAlpha2Code.Parse("BR")).Validate(address).IsValid);
         Assert.Equal("Praça da Sé\nSão Paulo - SP\n01001-000\nBrazil", formatter.Format(address));
 
-        var profile = profileProvider.GetProfile(CountryCode.BR);
+        var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("BR"));
         Assert.Equal(AddressProfileSource.CountrySpecific, profile.Source);
         Assert.Equal("CEP", profile.Fields.Single(field => field.Field == AddressField.PostalCode).Label);
         var administrativeArea = profile.Fields.Single(field => field.Field == AddressField.AdministrativeArea);
@@ -67,7 +68,7 @@ public class BrazilAddressingIntegrationTests
     [Fact]
     public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
     {
-        var result = _validator.Validate(CreateAddress(countryCode: CountryCode.MX));
+        var result = _validator.Validate(CreateAddress(countryCode: CountryAlpha2Code.Parse("MX")));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Issues, issue => issue.Code == "Address.CountryCode.Invalid");
@@ -112,7 +113,7 @@ public class BrazilAddressingIntegrationTests
         string city = "São Paulo",
         string? stateOrProvince = "SP",
         PostalCode postalCode = default,
-        CountryCode countryCode = default)
+        CountryAlpha2Code countryCode = default)
     {
         return new Address(
             line1,
@@ -120,11 +121,11 @@ public class BrazilAddressingIntegrationTests
             city,
             stateOrProvince,
             postalCode.Equals(default) ? new PostalCode("01001-000") : postalCode,
-            countryCode.Equals(default) ? CountryCode.BR : countryCode);
+            countryCode.Equals(default) ? CountryAlpha2Code.Parse("BR") : countryCode);
     }
 
     private static Address CreateAddressWithDefaultPostalCode()
     {
-        return new Address("Praça da Sé", null, "São Paulo", "SP", default, CountryCode.BR);
+        return new Address("Praça da Sé", null, "São Paulo", "SP", default, CountryAlpha2Code.Parse("BR"));
     }
 }

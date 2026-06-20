@@ -17,7 +17,7 @@ services.AddGreatBritainAddressing();
 
 ## What it provides
 
-- `CountryCode.GB` validator registration.
+- `GB` validator registration.
 - Great Britain address formatter.
 - Great Britain address profile metadata for forms.
 - UK postcode shape validation with internal case/spacing normalisation.
@@ -26,14 +26,16 @@ Validation is structural. It does not call external services and does not prove 
 
 ## Example
 
-```csharp
+`csharp
+using ISOCodex.Countries;
+
 var address = new Address(
     "10 Downing Street",
     null,
     "London",
     null,
     new PostalCode("SW1A 2AA"),
-    CountryCode.GB);
+    CountryAlpha2Code.Parse("GB"));
 ```
 
 Formatted output:

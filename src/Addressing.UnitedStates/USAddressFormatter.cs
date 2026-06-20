@@ -20,7 +20,7 @@ namespace ISOCodex.Addressing.UnitedStates
                     AddressFormatting.JoinParts(", ", address.City, address.StateOrProvince),
                     address.PostalCode.Code));
 
-            return AddressFormatting.FormatLines(lines, "United States", options);
+            return AddressFormatting.FormatLines(lines, AddressFormatting.GetCountryLine(address.CountryCode), options);
         }
     }
 }

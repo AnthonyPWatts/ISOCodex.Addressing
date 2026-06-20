@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,15 @@ namespace ISOCodex.Addressing.India
         public static IServiceCollection AddIndiaAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.IN,
+                CountryAlpha2Code.Parse("IN"),
                 () => new IndiaAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.IN,
+                CountryAlpha2Code.Parse("IN"),
                 () => new IndiaAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.IN,
+                CountryAlpha2Code.Parse("IN"),
                 CreateIndiaAddressProfile);
 
             return services;
@@ -27,7 +28,7 @@ namespace ISOCodex.Addressing.India
         private static AddressProfile CreateIndiaAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.IN,
+                CountryAlpha2Code.Parse("IN"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "Rashtrapati Bhavan"),

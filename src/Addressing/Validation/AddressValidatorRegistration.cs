@@ -1,18 +1,19 @@
 using System;
+using ISOCodex.Countries;
 
 namespace ISOCodex.Addressing.Validation
 {
     internal sealed class AddressValidatorRegistration
     {
         public AddressValidatorRegistration(
-            CountryCode country,
+            CountryAlpha2Code country,
             Func<IAddressValidator> createValidator)
         {
             Country = country;
             CreateValidator = createValidator;
         }
 
-        public CountryCode Country { get; }
+        public CountryAlpha2Code Country { get; }
 
         public Func<IAddressValidator> CreateValidator { get; }
     }

@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Canada;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.GreatBritain;
 using ISOCodex.Addressing.UnitedStates;
 using ISOCodex.Addressing.Validation;
@@ -33,9 +34,9 @@ public class AddressingServiceCollectionExtensionsTests
         using var serviceProvider = services.BuildServiceProvider();
         var factory = serviceProvider.GetRequiredService<IAddressValidatorFactory>();
 
-        Assert.IsType<USAddressValidator>(factory.GetValidator(CountryCode.US));
-        Assert.IsType<GBAddressValidator>(factory.GetValidator(CountryCode.GB));
-        Assert.IsType<CAAddressValidator>(factory.GetValidator(CountryCode.CA));
+        Assert.IsType<USAddressValidator>(factory.GetValidator(CountryAlpha2Code.Parse("US")));
+        Assert.IsType<GBAddressValidator>(factory.GetValidator(CountryAlpha2Code.Parse("GB")));
+        Assert.IsType<CAAddressValidator>(factory.GetValidator(CountryAlpha2Code.Parse("CA")));
     }
 
     [Fact]
@@ -48,7 +49,7 @@ public class AddressingServiceCollectionExtensionsTests
         var factory = serviceProvider.GetRequiredService<IAddressValidatorFactory>();
 
         var ex = Assert.Throws<InvalidOperationException>(
-            () => factory.GetValidator(CountryCode.ES));
+            () => factory.GetValidator(CountryAlpha2Code.Parse("ES")));
 
         Assert.Contains("ES", ex.Message);
     }
@@ -61,7 +62,7 @@ public class AddressingServiceCollectionExtensionsTests
 
         using var serviceProvider = services.BuildServiceProvider();
         var factory = serviceProvider.GetRequiredService<IAddressValidatorFactory>();
-        var validator = factory.GetValidator(CountryCode.Parse("FR"));
+        var validator = factory.GetValidator(CountryAlpha2Code.Parse("FR"));
 
         Assert.IsType<PermissiveAddressValidator>(validator);
     }
@@ -77,7 +78,7 @@ public class AddressingServiceCollectionExtensionsTests
         using var serviceProvider = services.BuildServiceProvider();
         var factory = serviceProvider.GetRequiredService<IAddressValidatorFactory>();
 
-        Assert.IsType<GBAddressValidator>(factory.GetValidator(CountryCode.GB));
-        Assert.IsType<PermissiveAddressValidator>(factory.GetValidator(CountryCode.Parse("FR")));
+        Assert.IsType<GBAddressValidator>(factory.GetValidator(CountryAlpha2Code.Parse("GB")));
+        Assert.IsType<PermissiveAddressValidator>(factory.GetValidator(CountryAlpha2Code.Parse("FR")));
     }
 }

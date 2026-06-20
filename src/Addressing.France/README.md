@@ -27,6 +27,7 @@ using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.France;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -46,14 +47,14 @@ var address = new Address(
     city: "Paris",
     stateOrProvince: null,
     postalCode: new PostalCode("75001"),
-    countryCode: CountryCode.FR);
+    countryCode: CountryAlpha2Code.Parse("FR"));
 
 var validationResult = validatorFactory
-    .GetValidator(CountryCode.FR)
+    .GetValidator(CountryAlpha2Code.Parse("FR"))
     .Validate(address);
 
 var formatted = formatter.Format(address);
-var profile = profileProvider.GetProfile(CountryCode.FR);
+var profile = profileProvider.GetProfile(CountryAlpha2Code.Parse("FR"));
 ```
 
 Default formatted output:

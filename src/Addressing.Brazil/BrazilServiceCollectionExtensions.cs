@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,15 @@ namespace ISOCodex.Addressing.Brazil
         public static IServiceCollection AddBrazilAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.BR,
+                CountryAlpha2Code.Parse("BR"),
                 () => new BrazilAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.BR,
+                CountryAlpha2Code.Parse("BR"),
                 () => new BrazilAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.BR,
+                CountryAlpha2Code.Parse("BR"),
                 CreateBrazilAddressProfile);
 
             return services;
@@ -27,7 +28,7 @@ namespace ISOCodex.Addressing.Brazil
         private static AddressProfile CreateBrazilAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.BR,
+                CountryAlpha2Code.Parse("BR"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Address line 1", true, 10, "Praça da Sé"),

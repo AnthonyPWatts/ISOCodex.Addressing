@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Profiles;
+using ISOCodex.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ISOCodex.Addressing.Spain
@@ -8,15 +9,15 @@ namespace ISOCodex.Addressing.Spain
         public static IServiceCollection AddSpainAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.ES,
+                CountryAlpha2Code.Parse("ES"),
                 () => new SpanishAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.ES,
+                CountryAlpha2Code.Parse("ES"),
                 () => new SpanishAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.ES,
+                CountryAlpha2Code.Parse("ES"),
                 CreateSpanishAddressProfile);
 
             return services;
@@ -25,7 +26,7 @@ namespace ISOCodex.Addressing.Spain
         private static AddressProfile CreateSpanishAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.ES,
+                CountryAlpha2Code.Parse("ES"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Calle y número", true, 10, "Calle Mayor 10"),

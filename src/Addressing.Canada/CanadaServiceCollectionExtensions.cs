@@ -1,4 +1,5 @@
 using ISOCodex.Addressing.Formatting;
+using ISOCodex.Countries;
 using ISOCodex.Addressing.Profiles;
 using ISOCodex.Addressing.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,15 +28,15 @@ namespace ISOCodex.Addressing.Canada
         public static IServiceCollection AddCanadaAddressing(this IServiceCollection services)
         {
             services.AddAddressValidator(
-                CountryCode.CA,
+                CountryAlpha2Code.Parse("CA"),
                 () => new CAAddressValidator());
 
             services.AddAddressFormatter(
-                CountryCode.CA,
+                CountryAlpha2Code.Parse("CA"),
                 () => new CAAddressFormatter());
 
             services.AddAddressProfile(
-                CountryCode.CA,
+                CountryAlpha2Code.Parse("CA"),
                 CreateCanadaAddressProfile);
 
             return services;
@@ -44,7 +45,7 @@ namespace ISOCodex.Addressing.Canada
         private static AddressProfile CreateCanadaAddressProfile()
         {
             return new AddressProfile(
-                CountryCode.CA,
+                CountryAlpha2Code.Parse("CA"),
                 new[]
                 {
                     Field(AddressField.AddressLine1, "Street address", true, 10, "111 Wellington Street"),

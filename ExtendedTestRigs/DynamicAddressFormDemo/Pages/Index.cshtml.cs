@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ISOCodex.Countries;
 using ISOCodex.Addressing;
 using ISOCodex.Addressing.Formatting;
 using ISOCodex.Addressing.Profiles;
@@ -93,7 +94,7 @@ public class IndexModel : PageModel
             Input.City!.Trim(),
             TrimToNull(Input.StateOrProvince),
             new PostalCode(Input.PostalCode!.Trim()),
-            ISOCodex.Addressing.CountryCode.Parse(CountryCode));
+            CountryAlpha2Code.Parse(CountryCode));
 
         var result = _validatorFactory.GetValidator(address.CountryCode).Validate(address);
         Status = result.IsValid ? "Valid" : "Invalid";
@@ -114,7 +115,7 @@ public class IndexModel : PageModel
 
     private void LoadProfile()
     {
-        Profile = _profileProvider.GetProfile(ISOCodex.Addressing.CountryCode.Parse(CountryCode));
+        Profile = _profileProvider.GetProfile(CountryAlpha2Code.Parse(CountryCode));
         RawProfileJson = JsonSerializer.Serialize(Profile, new JsonSerializerOptions
         {
             WriteIndented = true
