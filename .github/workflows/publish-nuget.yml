@@ -65,27 +65,34 @@ jobs:
             throw "Core package was not found."
           }
 
-          dotnet nuget push $package.FullName --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+          dotnet nuget push $package.FullName --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Publish country packages
         shell: pwsh
         run: |
+          $version = "${{ steps.ref.outputs.value }}".TrimStart("v")
           $packageIds = @(
             "ISOCodex.Addressing.GreatBritain",
             "ISOCodex.Addressing.UnitedStates",
             "ISOCodex.Addressing.Canada",
             "ISOCodex.Addressing.Spain",
             "ISOCodex.Addressing.Ireland",
-            "ISOCodex.Addressing.France"
+            "ISOCodex.Addressing.France",
+            "ISOCodex.Addressing.India",
+            "ISOCodex.Addressing.Brazil",
+            "ISOCodex.Addressing.Mexico",
+            "ISOCodex.Addressing.Germany",
+            "ISOCodex.Addressing.Italy"
           )
 
           foreach ($packageId in $packageIds) {
             $package = Get-ChildItem "artifacts/release-check/$packageId.*.nupkg" |
+              Where-Object { $_.BaseName -eq "$packageId.$version" } |
               Select-Object -First 1
 
             if ($null -eq $package) {
-              throw "$packageId package was not found."
+              throw "$packageId $version package was not found."
             }
 
-            dotnet nuget push $package.FullName --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+            dotnet nuget push $package.FullName --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }

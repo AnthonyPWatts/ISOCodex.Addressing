@@ -51,7 +51,31 @@ Before publishing, inspect the generated nuspec metadata and confirm:
 - every country package depends on the same version of `ISOCodex.Addressing`
   as the published core package
 
-## Publish Order
+## Publish with GitHub Actions Trusted Publishing
+
+The repository publishes through `.github/workflows/publish-nuget.yml` using
+NuGet Trusted Publishing. Configure the trusted publishing policy on NuGet with:
+
+- Repository owner: `AnthonyPWatts`
+- Repository: `ISOCodex.Addressing`
+- Workflow file: `publish-nuget.yml`
+- Environment: `release`
+
+The workflow expects `NUGET_USER` to contain the NuGet profile name, not an
+email address. The workflow requests a short-lived NuGet API key through OIDC
+and publishes the core package before the country packages.
+
+Create and push a release tag after the release commit is on `main`:
+
+```powershell
+git tag v<version>
+git push origin v<version>
+```
+
+Alternatively, run the `publish-nuget` workflow manually and provide the
+release tag.
+
+## Manual Publish Order
 
 Publish the core package first:
 
