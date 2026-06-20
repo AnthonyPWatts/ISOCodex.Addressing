@@ -16,7 +16,7 @@ namespace ISOCodex.Addressing.UnitedStates
                 "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS",
                 "KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY",
                 "NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV",
-                "WI","WY","DC","AS","GU","MP","PR","VI"
+                "WI","WY","DC","AS","FM","GU","MH","MP","PR","PW","VI","AA","AE","AP"
             };
 
         public AddressValidationResult Validate(Address? address)
@@ -29,7 +29,12 @@ namespace ISOCodex.Addressing.UnitedStates
                 return new AddressValidationResult(issues);
             }
 
-            if (!ZipCodeRegex.IsMatch(address.PostalCode.Code.Trim()))
+            if (!AddressValidationIssues.TryGetRequiredPostalCode(issues, address, out var zipCode))
+            {
+                return new AddressValidationResult(issues);
+            }
+
+            if (!ZipCodeRegex.IsMatch(zipCode))
             {
                 issues.Add(new AddressValidationIssue(
                     "Address.PostalCode.Invalid",
@@ -44,7 +49,7 @@ namespace ISOCodex.Addressing.UnitedStates
                     "StateOrProvince cannot be null or empty for US addresses.",
                     nameof(Address.StateOrProvince)));
             }
-            else if (!ValidStates.Contains(address.StateOrProvince))
+            else if (!ValidStates.Contains(address.StateOrProvince.Trim()))
             {
                 issues.Add(new AddressValidationIssue(
                     "Address.StateOrProvince.Invalid",

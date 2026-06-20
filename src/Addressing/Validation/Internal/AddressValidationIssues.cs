@@ -43,5 +43,25 @@ namespace ISOCodex.Addressing.Validation
             }
         }
 
+        public static bool TryGetRequiredPostalCode(
+            ICollection<AddressValidationIssue> issues,
+            Address address,
+            out string postalCode)
+        {
+            postalCode = address.PostalCode.Code ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(postalCode))
+            {
+                issues.Add(new AddressValidationIssue(
+                    "Address.PostalCode.Invalid",
+                    "PostalCode cannot be null or empty.",
+                    nameof(Address.PostalCode)));
+
+                return false;
+            }
+
+            postalCode = postalCode.Trim();
+            return true;
+        }
     }
 }

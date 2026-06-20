@@ -7,7 +7,7 @@ namespace ISOCodex.Addressing.GreatBritain
     public class GBAddressValidator : IAddressValidator
     {
         private static readonly Regex PostcodeRegex = new Regex(
-            @"^(GIR 0AA|[A-Z]{1,2}[0-9][0-9A-Z]? [0-9][A-Z]{2})$",
+            @"^(GIR 0AA|[A-PR-UWYZ][0-9][0-9A-HJKPSTUW]? [0-9][ABD-HJLNP-UW-Z]{2}|[A-PR-UWYZ][A-HK-Y][0-9][0-9ABEHMNPRV-Y]? [0-9][ABD-HJLNP-UW-Z]{2})$",
             RegexOptions.Compiled);
 
         public AddressValidationResult Validate(Address? address)
@@ -20,7 +20,12 @@ namespace ISOCodex.Addressing.GreatBritain
                 return new AddressValidationResult(issues);
             }
 
-            var normalizedPostcode = NormalizePostcode(address.PostalCode.Code);
+            if (!AddressValidationIssues.TryGetRequiredPostalCode(issues, address, out var postalCode))
+            {
+                return new AddressValidationResult(issues);
+            }
+
+            var normalizedPostcode = NormalizePostcode(postalCode);
 
             if (!PostcodeRegex.IsMatch(normalizedPostcode))
             {

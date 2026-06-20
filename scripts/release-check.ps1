@@ -11,10 +11,15 @@ $outputPath = Join-Path $repoRoot $OutputDirectory
 $propsPath = Join-Path $repoRoot "Directory.Build.props"
 $packageProjectPaths = @(
     "src/Addressing/Addressing.csproj",
+    "src/Addressing.Brazil/Addressing.Brazil.csproj",
     "src/Addressing.Canada/Addressing.Canada.csproj",
     "src/Addressing.France/Addressing.France.csproj",
+    "src/Addressing.Germany/Addressing.Germany.csproj",
     "src/Addressing.GreatBritain/Addressing.GreatBritain.csproj",
+    "src/Addressing.India/Addressing.India.csproj",
     "src/Addressing.Ireland/Addressing.Ireland.csproj",
+    "src/Addressing.Italy/Addressing.Italy.csproj",
+    "src/Addressing.Mexico/Addressing.Mexico.csproj",
     "src/Addressing.Spain/Addressing.Spain.csproj",
     "src/Addressing.UnitedStates/Addressing.UnitedStates.csproj"
 )

@@ -15,6 +15,11 @@ The core package and current country packages are stable and proven enough for p
 - `src/Addressing.Spain` - Spain country package
 - `src/Addressing.Ireland` - Ireland country package
 - `src/Addressing.France` - France country package
+- `src/Addressing.India` - India country package
+- `src/Addressing.Brazil` - Brazil country package
+- `src/Addressing.Mexico` - Mexico country package
+- `src/Addressing.Germany` - Germany country package
+- `src/Addressing.Italy` - Italy country package
 - `tests/Addressing.Tests` - unit and integration-style tests
 - `ManualTestRig` - small console app for quick manual smoke testing
 
@@ -27,6 +32,11 @@ The core package and current country packages are stable and proven enough for p
 - Spain country package: `ISOCodex.Addressing.Spain`
 - Ireland country package: `ISOCodex.Addressing.Ireland`
 - France country package: `ISOCodex.Addressing.France`
+- India country package: `ISOCodex.Addressing.India`
+- Brazil country package: `ISOCodex.Addressing.Brazil`
+- Mexico country package: `ISOCodex.Addressing.Mexico`
+- Germany country package: `ISOCodex.Addressing.Germany`
+- Italy country package: `ISOCodex.Addressing.Italy`
 - Root namespaces: `ISOCodex.Addressing*`
 
 ## Installation
@@ -39,6 +49,11 @@ dotnet add package ISOCodex.Addressing.Canada
 dotnet add package ISOCodex.Addressing.Spain
 dotnet add package ISOCodex.Addressing.Ireland
 dotnet add package ISOCodex.Addressing.France
+dotnet add package ISOCodex.Addressing.India
+dotnet add package ISOCodex.Addressing.Brazil
+dotnet add package ISOCodex.Addressing.Mexico
+dotnet add package ISOCodex.Addressing.Germany
+dotnet add package ISOCodex.Addressing.Italy
 ```
 
 ## Quick start
@@ -136,7 +151,7 @@ Address profiles expose country-specific metadata that applications can use to b
 
 Profiles are metadata only. They do not render UI, validate an address, format an address, autocomplete addresses, geocode, or prove deliverability. They are framework-agnostic, so the same data can be used from ASP.NET, Blazor, React, console tools, APIs, imports, or custom validation pipelines.
 
-For countries with well-defined administrative subdivisions in the package, the administrative-area field can include selectable `Options`. Current country-pack metadata includes options for US states and territories, Canadian provinces and territories, and Spanish provinces. GB counties intentionally remain a free-text optional field because county usage is not strict enough to model as a closed validation list.
+For countries with well-defined administrative subdivisions in the package, the administrative-area field can include selectable `Options`. Current country-pack metadata includes options for US states and territories, Canadian provinces and territories, Spanish provinces, Indian states and union territories, Brazilian UF codes, Mexican states, and Italian provinces. GB counties intentionally remain a free-text optional field because county usage is not strict enough to model as a closed validation list.
 
 ```csharp
 using ISOCodex.Addressing.Profiles;
@@ -150,7 +165,7 @@ foreach (var field in profile.Fields.OrderBy(field => field.DisplayOrder))
 }
 ```
 
-Country packages contribute profiles when their DI extension methods are called, for example `AddGreatBritainAddressing()`, `AddUnitedStatesAddressing()`, `AddCanadaAddressing()`, `AddSpainAddressing()`, `AddIrelandAddressing()`, or `AddFranceAddressing()`.
+Country packages contribute profiles when their DI extension methods are called, for example `AddGreatBritainAddressing()`, `AddUnitedStatesAddressing()`, `AddCanadaAddressing()`, `AddSpainAddressing()`, `AddIrelandAddressing()`, `AddFranceAddressing()`, `AddIndiaAddressing()`, `AddBrazilAddressing()`, `AddMexicoAddressing()`, `AddGermanyAddressing()`, or `AddItalyAddressing()`.
 
 `AddGenericAddressingFallbacks()` also registers a conservative generic profile for unsupported ISO countries. The returned profile has `Source = AddressProfileSource.GenericFallback`, while country-pack-backed profiles use `AddressProfileSource.CountrySpecific`.
 
@@ -416,6 +431,11 @@ For public APIs or storage contracts that should expose scalar strings, map to a
 - Spain (`ES`) via `ISOCodex.Addressing.Spain`
 - Ireland (`IE`) via `ISOCodex.Addressing.Ireland`
 - France (`FR`) via `ISOCodex.Addressing.France`
+- India (`IN`) via `ISOCodex.Addressing.India`
+- Brazil (`BR`) via `ISOCodex.Addressing.Brazil`
+- Mexico (`MX`) via `ISOCodex.Addressing.Mexico`
+- Germany (`DE`) via `ISOCodex.Addressing.Germany`
+- Italy (`IT`) via `ISOCodex.Addressing.Italy`
 
 Each country package transitively depends on the core `ISOCodex.Addressing` package and registers country-specific validation, formatting, and profile metadata through its DI extension method.
 
@@ -426,6 +446,30 @@ dotnet add package ISOCodex.Addressing.Canada
 dotnet add package ISOCodex.Addressing.Spain
 dotnet add package ISOCodex.Addressing.Ireland
 dotnet add package ISOCodex.Addressing.France
+dotnet add package ISOCodex.Addressing.India
+dotnet add package ISOCodex.Addressing.Brazil
+dotnet add package ISOCodex.Addressing.Mexico
+dotnet add package ISOCodex.Addressing.Germany
+dotnet add package ISOCodex.Addressing.Italy
+```
+
+| Country | Extension method | Postal-code scope | Administrative area |
+| --- | --- | --- | --- |
+| India | `AddIndiaAddressing()` | Six-digit PIN code | Required state or union territory |
+| Brazil | `AddBrazilAddressing()` | CEP with or without hyphen | Required UF |
+| Mexico | `AddMexicoAddressing()` | Five-digit postal code | Required state |
+| Germany | `AddGermanyAddressing()` | Five-digit postcode | Not required |
+| Italy | `AddItalyAddressing()` | Five-digit CAP | Required province |
+
+For example:
+
+```csharp
+using ISOCodex.Addressing.Brazil;
+using ISOCodex.Addressing.Germany;
+
+services.AddAddressing();
+services.AddBrazilAddressing();
+services.AddGermanyAddressing();
 ```
 
 ### Spain

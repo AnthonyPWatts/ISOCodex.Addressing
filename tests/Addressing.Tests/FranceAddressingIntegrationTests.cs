@@ -20,6 +20,14 @@ public class FranceAddressingIntegrationTests
         Assert.True(result.IsValid);
     }
 
+    [Fact]
+    public void Validate_WithOverseasPostalCode_ReturnsValidResult()
+    {
+        var result = _validator.Validate(CreateAddress(postalCode: new PostalCode("97100")));
+
+        Assert.True(result.IsValid);
+    }
+
     [Theory]
     [InlineData("7500")]
     [InlineData("750011")]

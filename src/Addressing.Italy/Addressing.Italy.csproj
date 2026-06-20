@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <AssemblyName>ISOCodex.Addressing.Italy</AssemblyName>
+    <RootNamespace>ISOCodex.Addressing.Italy</RootNamespace>
+
+    <PackageId>ISOCodex.Addressing.Italy</PackageId>
+    <Description>Italy-specific extension package for ISOCodex.Addressing.</Description>
+    <PackageTags>address italy cap postal-address iso3166 validation</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Addressing\Addressing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

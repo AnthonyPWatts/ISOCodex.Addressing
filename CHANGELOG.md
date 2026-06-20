@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0
+
+- Added country packages for India, Brazil, Mexico, Germany, and Italy.
+- Enriched existing validators for safer default postal-code handling and improved country-specific postal/admin-area coverage.
+- Expanded US postal administrative-area support for additional USPS state, possession, and military codes.
+- Tightened Canada postal-code structure validation.
+- Tightened Ireland Eircode structural validation.
+- Refactored newer validators/formatters to reuse shared validation and formatting helpers.
+
 ## 1.2.0
 
 Moves all country-specific behaviour into country packages and adds Ireland and France.

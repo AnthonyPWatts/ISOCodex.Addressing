@@ -6,16 +6,16 @@ public class GBAddressValidatorTests
 {
     private readonly GBAddressValidator _validator = new();
 
-    [Fact]
-    public void Validate_WithValidAddress_ReturnsValidResult()
+    [Theory]
+    [InlineData("SW1A 2AA")]
+    [InlineData("GIR 0AA")]
+    [InlineData("M1 1AE")]
+    [InlineData("B33 8TH")]
+    [InlineData("CR2 6XH")]
+    [InlineData("DN55 1PT")]
+    public void Validate_WithValidPostcode_ReturnsValidResult(string postcode)
     {
-        var address = new Address(
-            "10 Downing St",
-            null,
-            "London",
-            null,
-            new PostalCode("SW1A 2AA"),
-            CountryCode.GB);
+        var address = CreateAddress(new PostalCode(postcode));
 
         var result = _validator.Validate(address);
 
@@ -25,13 +25,7 @@ public class GBAddressValidatorTests
     [Fact]
     public void Validate_WithLowercasePostcodeWithoutSpace_ReturnsValidResult()
     {
-        var address = new Address(
-            "10 Downing St",
-            null,
-            "London",
-            null,
-            new PostalCode("sw1a2aa"),
-            CountryCode.GB);
+        var address = CreateAddress(new PostalCode("sw1a2aa"));
 
         var result = _validator.Validate(address);
 
@@ -42,13 +36,7 @@ public class GBAddressValidatorTests
     [Fact]
     public void Validate_WithInvalidPostcode_ReturnsIssue()
     {
-        var address = new Address(
-            "10 Downing St",
-            null,
-            "London",
-            null,
-            new PostalCode("BADCODE"),
-            CountryCode.GB);
+        var address = CreateAddress(new PostalCode("BADCODE"));
 
         var result = _validator.Validate(address);
 
@@ -56,5 +44,57 @@ public class GBAddressValidatorTests
         Assert.Contains(
             result.Issues,
             issue => issue.Code == "Address.PostalCode.Invalid");
+    }
+
+    [Fact]
+    public void Validate_WithInvalidAreaCombination_ReturnsIssue()
+    {
+        var result = _validator.Validate(CreateAddress(new PostalCode("QQ1 1AA")));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == "Address.PostalCode.Invalid");
+    }
+
+    [Fact]
+    public void Validate_WithDefaultPostalCode_ReturnsPostalCodeIssue()
+    {
+        var result = _validator.Validate(new Address(
+            "10 Downing St",
+            null,
+            "London",
+            null,
+            default,
+            CountryCode.GB));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == "Address.PostalCode.Invalid");
+    }
+
+    [Fact]
+    public void Validate_WithWrongCountryCode_ReturnsCountryCodeIssue()
+    {
+        var result = _validator.Validate(CreateAddress(new PostalCode("SW1A 2AA"), CountryCode.US));
+
+        Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == "Address.CountryCode.Invalid");
+    }
+
+    private static Address CreateAddress(
+        PostalCode postalCode,
+        CountryCode countryCode = default)
+    {
+        return new Address(
+            "10 Downing St",
+            null,
+            "London",
+            null,
+            postalCode,
+            countryCode.Equals(default) ? CountryCode.GB : countryCode);
     }
 }

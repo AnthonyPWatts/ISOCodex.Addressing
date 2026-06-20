@@ -1,11 +1,46 @@
 # ISOCodex.Addressing.Canada
 
-Canada country pack for `ISOCodex.Addressing`.
+Canada-specific extension package for `ISOCodex.Addressing`.
 
-```csharp
-services
-    .AddAddressing()
-    .AddCanadaAddressing();
+## Installation
+
+```bash
+dotnet add package ISOCodex.Addressing.Canada
 ```
 
-Registers CA validation, formatting, and address profile metadata for country code `CA`.
+## Registration
+
+```csharp
+services.AddAddressing();
+services.AddCanadaAddressing();
+```
+
+## What it provides
+
+- `CountryCode.CA` validator registration.
+- Canada address formatter.
+- Canada address profile metadata for forms.
+- Canadian postal-code structure validation with internal case/spacing normalisation.
+- Province and territory validation when supplied.
+
+Validation is structural. It does not call external services and does not prove that an address exists or is deliverable. It does not cross-check city, province, and postal-code combinations.
+
+## Example
+
+```csharp
+var address = new Address(
+    "111 Wellington Street",
+    null,
+    "Ottawa",
+    "ON",
+    new PostalCode("K1A 0A6"),
+    CountryCode.CA);
+```
+
+Formatted output:
+
+```text
+111 Wellington Street
+Ottawa ON K1A 0A6
+Canada
+```

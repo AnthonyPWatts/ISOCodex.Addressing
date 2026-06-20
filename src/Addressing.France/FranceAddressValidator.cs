@@ -13,17 +13,19 @@ namespace ISOCodex.Addressing.France
         {
             var issues = new List<AddressValidationIssue>();
 
-            AddCommonIssues(issues, address);
+            AddressValidationIssues.AddCommonIssues(issues, address, CountryCode.FR, "French");
 
             if (address == null)
             {
                 return new AddressValidationResult(issues);
             }
 
-            var postalCode = address.PostalCode.Code;
+            if (!AddressValidationIssues.TryGetRequiredPostalCode(issues, address, out var postalCode))
+            {
+                return new AddressValidationResult(issues);
+            }
 
-            if (string.IsNullOrWhiteSpace(postalCode) ||
-                !PostalCodeRegex.IsMatch(postalCode.Trim()))
+            if (!PostalCodeRegex.IsMatch(postalCode))
             {
                 issues.Add(new AddressValidationIssue(
                     "Address.PostalCode.Invalid",
@@ -32,43 +34,6 @@ namespace ISOCodex.Addressing.France
             }
 
             return new AddressValidationResult(issues);
-        }
-
-        private static void AddCommonIssues(
-            ICollection<AddressValidationIssue> issues,
-            Address? address)
-        {
-            if (address == null)
-            {
-                issues.Add(new AddressValidationIssue(
-                    "Address.Required",
-                    "Address cannot be null."));
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(address.Line1))
-            {
-                issues.Add(new AddressValidationIssue(
-                    "Address.Line1.Required",
-                    "Line1 cannot be null or empty.",
-                    nameof(Address.Line1)));
-            }
-
-            if (string.IsNullOrWhiteSpace(address.City))
-            {
-                issues.Add(new AddressValidationIssue(
-                    "Address.City.Required",
-                    "City cannot be null or empty.",
-                    nameof(Address.City)));
-            }
-
-            if (address.CountryCode != CountryCode.FR)
-            {
-                issues.Add(new AddressValidationIssue(
-                    "Address.CountryCode.Invalid",
-                    "CountryCode must be 'FR' for French addresses.",
-                    nameof(Address.CountryCode)));
-            }
         }
     }
 }

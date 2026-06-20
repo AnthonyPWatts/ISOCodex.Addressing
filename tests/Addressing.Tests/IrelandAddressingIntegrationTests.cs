@@ -27,6 +27,7 @@ public class IrelandAddressingIntegrationTests
     [InlineData("D02 X28")]
     [InlineData("D02 X2859")]
     [InlineData("D02-285")]
+    [InlineData("D0O X285")]
     public void Validate_WithInvalidEircode_ReturnsPostalCodeIssue(string eircode)
     {
         var result = _validator.Validate(CreateAddress(postalCode: new PostalCode(eircode)));
