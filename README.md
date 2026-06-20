@@ -4,7 +4,9 @@
 
 ## Project status
 
-The core package and current country packages are stable and proven enough for production use. Future country packages will be demand-led: new countries should be added when there is a real consuming use case, sample data, or user need to justify maintaining the rules.
+The current release candidate is `2.0.0-alpha`. It intentionally makes the breaking move from Addressing-owned country identity to `ISOCodex.Countries`, so consumers should treat it as prerelease validation of the 2.0 API rather than a production-stable package line.
+
+The established country packages remain demand-led: new countries should be added when there is a real consuming use case, sample data, or user need to justify maintaining the rules.
 
 ## Projects
 
@@ -582,6 +584,8 @@ Package identity, namespaces, NuGet metadata, and package documentation should s
 ## Compatibility policy
 
 From `1.0.0`, public types, method signatures, value-object behaviour, and validation issue codes are treated as compatibility-sensitive.
+
+Version `2.0.0-alpha` intentionally makes the breaking move from Addressing-owned country identity to `ISOCodex.Countries`.
 
 Patch and minor releases may add new countries, metadata, helper APIs, validation cases, and documentation. They may also correct country-specific formatting or validation behaviour where the existing behaviour is demonstrably wrong.
 
