@@ -150,10 +150,10 @@ public class AddressProfileProviderTests
 
         Assert.Equal(CountryAlpha2Code.Parse("FR"), profile.CountryCode);
         Assert.Equal(AddressProfileSource.GenericFallback, profile.Source);
+        AssertRequired(profile, AddressField.AddressLine1);
+        AssertRequired(profile, AddressField.Locality);
+        AssertRequired(profile, AddressField.PostalCode);
         AssertRequired(profile, AddressField.Country);
-        Assert.Contains(
-            profile.Fields,
-            field => field.Field == AddressField.AddressLine1 && field.IsRequired);
     }
 
     [Theory]

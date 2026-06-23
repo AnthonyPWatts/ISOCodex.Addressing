@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+- Updated `ISOCodex.Countries` to `1.0.1`.
+- Aligned the generic fallback address profile with the core `Address` constructor by marking locality and postal code as required.
+- Confirmed the remaining consumer-convenience ideas from the extended test rigs are deferred until there is demand for them.
+
 ## 2.0.0
 
 - Replaced the Addressing-owned `CountryCode` value object with `ISOCodex.Countries.CountryAlpha2Code`.

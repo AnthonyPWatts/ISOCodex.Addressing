@@ -46,6 +46,8 @@
 
 ## Possible future package features
 
+These are deliberately parked after the `2.0.1` close-out unless real consumer demand appears. The current package surface is considered sufficient for the next publish.
+
 - `GetSupportedCountries` from a profile provider, validator factory, formatter, or aggregate registry.
 - `ValidateAndFormat` helper returning validation result plus formatted output.
 - `ToProblemDetails`, `ToModelState`, or `ToErrorDictionary` helpers for validation issues.
@@ -54,7 +56,7 @@
 
 ## Defects or suspected defects
 
-- No confirmed core defect was fixed while building these POCs.
+- The generic fallback profile originally marked locality and postal code as optional even though the core `Address` model requires them. This is fixed for `2.0.1`.
 - The constructor-before-validation behaviour is not necessarily a defect, but it complicates structured validation in apps.
 
 ## Nice-to-have improvements

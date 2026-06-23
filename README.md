@@ -4,9 +4,11 @@
 
 ## Project status
 
-The current stable release is `2.0.0`. The package family has been exercised through unit tests, package validation, and consumer-style test rigs for checkout APIs, dynamic forms, and bulk imports.
+The current stable release is `2.0.1`. The package family has been exercised through unit tests, package validation, and consumer-style test rigs for checkout APIs, dynamic forms, and bulk imports.
 
 The established country packages remain demand-led: new countries should be added when there is a real consuming use case, sample data, or user need to justify maintaining the rules.
+
+The remaining consumer-convenience ideas from the extended test rigs, such as supported-country catalogues, validation-to-UI helpers, and one-call formatting shortcuts, are intentionally parked until there is enough demand to justify expanding the public API.
 
 ## Projects
 

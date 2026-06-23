@@ -13,9 +13,9 @@ namespace ISOCodex.Addressing.Profiles
                     Field(AddressField.AddressLine1, "Address line 1", true, 10),
                     Field(AddressField.AddressLine2, "Address line 2", false, 20),
                     Field(AddressField.AddressLine3, "Address line 3", false, 30),
-                    Field(AddressField.Locality, "Town / city / locality", false, 40),
+                    Field(AddressField.Locality, "Town / city / locality", true, 40),
                     Field(AddressField.AdministrativeArea, "State / province / region", false, 50),
-                    Field(AddressField.PostalCode, "Postal code", false, 60),
+                    Field(AddressField.PostalCode, "Postal code", true, 60),
                     Field(AddressField.Country, "Country", true, 70)
                 },
                 AddressProfileSource.GenericFallback);
@@ -35,6 +35,5 @@ namespace ISOCodex.Addressing.Profiles
                 displayOrder,
                 placeholder);
         }
-
     }
 }
