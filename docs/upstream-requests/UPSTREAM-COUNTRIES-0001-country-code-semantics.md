@@ -10,7 +10,7 @@ provider_contact: Countries agent
 related_consumer_issue: null
 related_provider_issue: https://github.com/AnthonyPWatts/ISOCodex.Countries/issues/1
 related_provider_pr: null
-provider_version_required: 1.0.0-alpha.1
+provider_version_required: 1.0.0
 ---
 
 # Countries country-code semantics documentation
@@ -47,11 +47,11 @@ The provider documentation request was raised as:
 
 https://github.com/AnthonyPWatts/ISOCodex.Countries/issues/1
 
-It was resolved in `ISOCodex.Countries` `1.0.0-alpha.1`. The package README now documents the distinction between alpha-2 syntax validation, current-country registry lookup, and special code-element lookup, including the recommended `CountryAlpha2Code.TryParse` plus `CountryRegistry.TryGetByAlpha2` pattern for consumers.
+It was resolved in `ISOCodex.Countries` `1.0.0`. The package README now documents the distinction between alpha-2 syntax validation, current-country registry lookup, and special code-element lookup, including the recommended `CountryAlpha2Code.TryParse` plus `CountryRegistry.TryGetByAlpha2` pattern for consumers.
 
 ## Consumer Resolution
 
-Addressing consumes `ISOCodex.Countries` `1.0.0-alpha.1`.
+Addressing consumes `ISOCodex.Countries` `1.0.0`.
 
 Addressing keeps its existing behaviour:
 

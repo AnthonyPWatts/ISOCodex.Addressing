@@ -4,7 +4,7 @@
 
 ## Project status
 
-The current release candidate is `2.0.0-alpha`. It intentionally makes the breaking move from Addressing-owned country identity to `ISOCodex.Countries`, so consumers should treat it as prerelease validation of the 2.0 API rather than a production-stable package line.
+The current stable release is `2.0.0`. The package family has been exercised through unit tests, package validation, and consumer-style test rigs for checkout APIs, dynamic forms, and bulk imports.
 
 The established country packages remain demand-led: new countries should be added when there is a real consuming use case, sample data, or user need to justify maintaining the rules.
 
@@ -585,7 +585,7 @@ Package identity, namespaces, NuGet metadata, and package documentation should s
 
 From `1.0.0`, public types, method signatures, value-object behaviour, and validation issue codes are treated as compatibility-sensitive.
 
-Version `2.0.0-alpha` intentionally makes the breaking move from Addressing-owned country identity to `ISOCodex.Countries`.
+Version `2.0.0` made the breaking move from Addressing-owned country identity to `ISOCodex.Countries`.
 
 Patch and minor releases may add new countries, metadata, helper APIs, validation cases, and documentation. They may also correct country-specific formatting or validation behaviour where the existing behaviour is demonstrably wrong.
 

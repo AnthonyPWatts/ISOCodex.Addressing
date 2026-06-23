@@ -513,7 +513,7 @@ Country support is provided through additional packages. The current repository 
 
 ## Compatibility policy
 
-From `1.0.0`, public types, method signatures, value-object behaviour, and validation issue codes are treated as compatibility-sensitive. Version `2.0.0-alpha` intentionally makes the breaking move from Addressing-owned country identity to `ISOCodex.Countries`.
+From `1.0.0`, public types, method signatures, value-object behaviour, and validation issue codes are treated as compatibility-sensitive. Version `2.0.0` made the breaking move from Addressing-owned country identity to `ISOCodex.Countries`.
 
 Patch and minor releases may add new countries, metadata, helper APIs, validation cases, and documentation. They may also correct country-specific formatting or validation behaviour where the existing behaviour is demonstrably wrong.
 

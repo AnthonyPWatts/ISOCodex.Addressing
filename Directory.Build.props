@@ -2,7 +2,7 @@
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
-    <Version>2.0.0-alpha</Version>
+    <Version>2.0.0</Version>
     <Authors>Anthony P Watts</Authors>
     <Company>ISOCodex</Company>
 
