@@ -1,0 +1,33 @@
+{
+  "project": "ISOCodex.Addressing",
+  "captureSelector": "[data-portfolio-capture=\"address-form-demo\"]",
+  "summary": "Country-aware address entry generated, validated and formatted through the public ISOCodex.Addressing APIs.",
+  "captures": [
+    {
+      "id": "spain-valid-desktop",
+      "url": "/?CountryCode=ES&SampleId=es-valid",
+      "viewport": {
+        "width": 1440,
+        "height": 1100,
+        "deviceScaleFactor": 1
+      },
+      "fullPage": true,
+      "output": "Screenshots/spanish-profile-form.png",
+      "alt": "ISOCodex.Addressing demo showing a valid Spanish address, localised fields and formatted delivery output.",
+      "caption": "A single address profile drives Spanish terminology, province selection, validation and delivery formatting."
+    },
+    {
+      "id": "spain-invalid-postal-code",
+      "url": "/?CountryCode=ES&SampleId=es-invalid-postal",
+      "viewport": {
+        "width": 1440,
+        "height": 1100,
+        "deviceScaleFactor": 1
+      },
+      "fullPage": true,
+      "output": "Screenshots/spanish-invalid-postal-code.png",
+      "alt": "ISOCodex.Addressing demo showing country-specific rejection of an invalid Spanish postal code.",
+      "caption": "Country-specific validation feeds field-level feedback without coupling the UI to Spain-only rules."
+    }
+  ]
+}

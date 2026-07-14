@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using ISOCodex.Countries;
 using ISOCodex.Addressing;
@@ -65,13 +66,31 @@ public class IndexModel : PageModel
 
     public string Status { get; private set; } = "Not validated";
 
+    public string CountryName => CountryChoices.First(country => country.Code == CountryCode).Name;
+
     public void OnGet()
     {
         CountryCode = NormalizeCountry(CountryCode);
-        Input = LoadSample(SampleId) ?? new AddressFormInput { CountryCode = CountryCode };
-        CountryCode = NormalizeCountry(Input.CountryCode);
+        var sample = SampleChoices.FirstOrDefault(candidate =>
+            candidate.Id == SampleId && candidate.CountryCode == CountryCode);
+
+        if (sample is null)
+        {
+            SampleId = null;
+            Input = new AddressFormInput { CountryCode = CountryCode };
+        }
+        else
+        {
+            Input = LoadSample(sample);
+        }
+
         Input.CountryCode = CountryCode;
         LoadProfile();
+
+        if (sample is not null)
+        {
+            ValidateInput();
+        }
     }
 
     public void OnPost()
@@ -80,6 +99,11 @@ public class IndexModel : PageModel
         Input.CountryCode = CountryCode;
         LoadProfile();
 
+        ValidateInput();
+    }
+
+    private void ValidateInput()
+    {
         var issues = MapConstructionIssues(Input);
         if (issues.Count > 0)
         {
@@ -113,23 +137,25 @@ public class IndexModel : PageModel
         return string.Join(" ", FieldIssues.Where(issue => issue.Field == field).Select(issue => issue.Message));
     }
 
+    public string FieldLabelFor(string field)
+    {
+        return Profile.Fields
+            .FirstOrDefault(profileField => ToInputField(profileField.Field) == field)
+            ?.Label ?? field;
+    }
+
     private void LoadProfile()
     {
         Profile = _profileProvider.GetProfile(CountryAlpha2Code.Parse(CountryCode));
         RawProfileJson = JsonSerializer.Serialize(Profile, new JsonSerializerOptions
         {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = true
         });
     }
 
-    private static AddressFormInput? LoadSample(string? sampleId)
+    private static AddressFormInput LoadSample(SampleChoice sample)
     {
-        var sample = SampleChoices.FirstOrDefault(candidate => candidate.Id == sampleId);
-        if (sample is null)
-        {
-            return null;
-        }
-
         return new AddressFormInput
         {
             CountryCode = sample.CountryCode,

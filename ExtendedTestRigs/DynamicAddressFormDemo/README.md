@@ -1,6 +1,6 @@
 # DynamicAddressFormDemo
 
-Razor Pages POC for a back-office address entry screen that changes fields based on `IAddressProfileProvider` metadata.
+Portfolio-quality Razor Pages test rig for a back-office address entry screen that changes fields based on `IAddressProfileProvider` metadata.
 
 ## Countries
 
@@ -14,9 +14,38 @@ dotnet run --project ExtendedTestRigs/DynamicAddressFormDemo --urls http://local
 
 Open `http://localhost:5001`.
 
-## Screenshot
+## Screenshots
 
-![Dynamic address form demo showing the Spanish profile form](Screenshots/spanish-profile-form.png)
+![Validated Spanish address in the desktop demo](Screenshots/spanish-profile-form.png)
+
+![Invalid Spanish postal code with country-specific field feedback](Screenshots/spanish-invalid-postal-code.png)
+
+## Reproduce the capture state
+
+Open this deterministic scenario URL after starting the app:
+
+```text
+http://localhost:5001/?CountryCode=ES&SampleId=es-valid
+```
+
+Selecting any sample loads and validates it immediately. The checked-in screenshots use the Spanish valid and invalid-postal-code scenarios with the raw metadata panel collapsed.
+
+## Portfolio capture contract
+
+[`portfolio-captures.json`](portfolio-captures.json) gives agents stable scenario URLs, viewport sizes, output filenames, alt text and evidence-backed captions. The main capture surface is also marked with:
+
+```css
+[data-portfolio-capture="address-form-demo"]
+```
+
+Within it, `data-portfolio-region` identifies the scenario controls, generated form, validation result and profile evidence. This keeps screenshot automation independent of presentational CSS classes.
+
+Useful, supportable portfolio claims include:
+
+- One public profile API drives country-specific labels, field order, required state and select options.
+- The same test rig exercises valid and invalid paths through country-specific validators.
+- Valid addresses are rendered through the package formatter rather than a demo-only template.
+- Spain, France and Ireland demonstrate structurally different address-entry conventions.
 
 ## Features exercised
 
@@ -25,10 +54,10 @@ Open `http://localhost:5001`.
 - Free-text administrative areas for France and Ireland.
 - Posting the generated form back through country-specific validation.
 - Field-level validation issue display.
-- Valid and invalid sample addresses loaded from the UI.
+- Valid and invalid sample addresses loaded and validated immediately from the UI.
 
 ## Known limitations
 
 - The form uses a small local mapping layer from profile fields to the library's `Address` constructor.
 - Only the fields represented by the core `Address` model can be posted.
-- The page shows raw profile JSON for debugging, not as polished UX.
+- Raw profile JSON remains available in a collapsed diagnostic panel.
