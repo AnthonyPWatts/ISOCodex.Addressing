@@ -108,6 +108,24 @@ SW1A 2AA
 United Kingdom
 ```
 
+## See it in a form
+
+[`DynamicAddressFormDemo`](ExtendedTestRigs/DynamicAddressFormDemo) is a Razor Pages test rig that renders address-entry fields from `IAddressProfileProvider`, sends posted values through the country validator, and formats valid addresses with `IAddressFormatter`.
+
+The Spanish profile supplies the field order, labels and province select list. A valid submission displays the formatted address.
+
+![Validated Spanish address in the dynamic address form demo](ExtendedTestRigs/DynamicAddressFormDemo/Screenshots/spanish-profile-form.png)
+
+The same request path returns field feedback from the country-specific validator when the postal code is invalid.
+
+![Invalid Spanish postal code with country-specific field feedback](ExtendedTestRigs/DynamicAddressFormDemo/Screenshots/spanish-invalid-postal-code.png)
+
+The handler selects a registered validator through `IAddressValidatorFactory` and calls the package formatter after a successful validation result.
+
+![Demo request handler constructing an address, selecting its validator and formatting the valid result](ExtendedTestRigs/DynamicAddressFormDemo/Screenshots/ide-validation-pipeline.png)
+
+See the [demo README](ExtendedTestRigs/DynamicAddressFormDemo/README.md) for the runnable setup, capture scenarios and service registration source.
+
 ## Address formatting
 
 Formatting is routed by `Address.CountryCode`. Register the countries your app supports, then ask `IAddressFormatter` to produce display or output text for each address.

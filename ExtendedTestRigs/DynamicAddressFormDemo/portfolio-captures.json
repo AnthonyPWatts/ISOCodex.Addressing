@@ -2,6 +2,23 @@
   "project": "ISOCodex.Addressing",
   "captureSelector": "[data-portfolio-capture=\"address-form-demo\"]",
   "summary": "Country-aware address entry generated, validated and formatted through the public ISOCodex.Addressing APIs.",
+  "documentationCapture": {
+    "id": "dynamic-address-form-readme",
+    "source": "README.md",
+    "renderAs": "GitHub-flavoured Markdown",
+    "focus": [
+      "Screenshots",
+      "Portfolio capture contract",
+      "Features exercised"
+    ],
+    "viewport": {
+      "width": 1440,
+      "height": 1200,
+      "deviceScaleFactor": 1
+    },
+    "alt": "Rendered documentation for the ISOCodex.Addressing dynamic address-form demo, including validated and invalid scenario evidence.",
+    "caption": "The README pairs the visible form states with the precise public behaviour that the demo exercises."
+  },
   "captures": [
     {
       "id": "spain-valid-desktop",
@@ -28,6 +45,22 @@
       "output": "Screenshots/spanish-invalid-postal-code.png",
       "alt": "ISOCodex.Addressing demo showing country-specific rejection of an invalid Spanish postal code.",
       "caption": "Country-specific validation feeds field-level feedback without coupling the UI to Spain-only rules."
+    }
+  ],
+  "codeCaptures": [
+    {
+      "id": "service-registration",
+      "source": "Program.cs#L6-L14",
+      "output": "Screenshots/ide-service-registration.png",
+      "alt": "Visual Studio Code showing the DynamicAddressFormDemo registering core addressing with Spain, France and Ireland.",
+      "caption": "The demo composes the core service and only the country packages it exercises."
+    },
+    {
+      "id": "validation-and-formatting",
+      "source": "Pages/Index.cshtml.cs#L115-L132",
+      "output": "Screenshots/ide-validation-pipeline.png",
+      "alt": "Visual Studio Code showing the demo constructing an address, resolving a country validator and formatting a valid result.",
+      "caption": "One public address model passes through country validation before the package formatter renders delivery output."
     }
   ]
 }

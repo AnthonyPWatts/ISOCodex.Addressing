@@ -20,6 +20,14 @@ Open `http://localhost:5001`.
 
 ![Invalid Spanish postal code with country-specific field feedback](Screenshots/spanish-invalid-postal-code.png)
 
+## Code in use
+
+The demo's integration is small enough to inspect directly. These captures show the real service registration and the request path that constructs, validates and formats an address.
+
+![Visual Studio Code showing core addressing with Spain, France and Ireland registered for the demo](Screenshots/ide-service-registration.png)
+
+![Visual Studio Code showing the demo constructing an address, selecting a country validator and formatting a valid result](Screenshots/ide-validation-pipeline.png)
+
 ## Reproduce the capture state
 
 Open this deterministic scenario URL after starting the app:
